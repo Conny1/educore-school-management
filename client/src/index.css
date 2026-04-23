@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #2563eb;
+  --color-bg-base: #f8f7f2;
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  
+  --color-sidebar-bg: #1e293b;
+  --color-sidebar-text: #cbd5e1;
+  --color-sidebar-active: #334155;
+  
+  --radius-card: 12px;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+@layer base {
+  body {
+    @apply bg-bg-base text-text-main font-sans antialiased;
+  }
+  
+  /* Table Styles from the Theme */
+  table {
+    @apply w-full border-collapse text-left text-sm;
+  }
+  
+  th {
+    @apply bg-[#fcfcfb] px-5 py-3 font-semibold text-text-muted border-b border-gray-200 text-[0.75rem] uppercase tracking-wider;
+  }
+  
+  td {
+    @apply px-5 py-3 border-b border-gray-200;
+  }
+  
+  tr:nth-child(even) {
+    @apply bg-gray-50/50;
+  }
+}
+
+@layer components {
+  .sms-card {
+    @apply bg-white rounded-card border border-gray-200 shadow-card overflow-hidden;
+  }
+  
+  .sms-card-header {
+    @apply px-5 py-4 border-b border-gray-200 flex items-center justify-between;
+  }
+  
+  .sms-card-title {
+    @apply text-[0.9375rem] font-bold text-text-main;
+  }
+}

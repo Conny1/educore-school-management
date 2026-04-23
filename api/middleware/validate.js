@@ -1,0 +1,25 @@
+import Joi from 'joi';
+import { createError } from '../configs/errorConfig.js';
+
+export const pick = (object, keys) => {
+  return keys.reduce((obj, key) => {
+    if (object && Object.prototype.hasOwnProperty.call(object, key)) {
+      obj[key] = object[key];
+    }
+    return obj;
+  }, {});
+};
+
+export const validate = (schema) => (req, res, next) => {
+  const validSchema = pick(schema, ['params', 'query', 'body']);
+  const object = pick(req, Object.keys(validSchema));
+  const { value, error } = Joi.compile(validSchema)
+    .prefs({ errors: { label: 'key' }, abortEarly: false })
+    .validate(object);
+  if (error) {
+    const errorMessage = error.details.map((d) => d.message).join(', ');
+    return next(createError(412, errorMessage));
+  }
+  Object.assign(req, value);
+  return next();
+};
