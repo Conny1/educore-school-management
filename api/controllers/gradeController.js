@@ -1,4 +1,9 @@
 import * as gradeService from '../services/gradeService.js'
+import { createError } from "../configs/errorConfig.js";
+import * as inventoryService from "../services/inventoryService.js";
+import { pick } from '../middleware/validate.js';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
 export const getGrades = async (req, res, next) => {
   try {
@@ -54,3 +59,41 @@ export const deleteGrade = async (req, res, next) => {
     next(err)
   }
 }
+
+
+
+export const findandfilterGrade = async (req, resp, next) => {
+  try {
+    let filter = {
+      is_deleted: false,
+      schoolId: new ObjectId(req.user.schoolId),
+    };
+
+    for (let key in req.body.match_values) {
+      if (req.body.match_values[key] || req.body.match_values[key] === "") {
+        filter[key] = req.body.match_values[key];
+      }
+      if (ObjectId.isValid(req.body.match_values[key]))
+        filter[key] = new ObjectId(req.body.match_values[key]);
+      else if (Array.isArray(req.body.match_values[key]))
+        filter[key] = { $in: req.body.match_values[key] };
+    }
+    const options = pick(req.body, ["sortBy", "limit", "page"]);
+    if (req.body?.search) {
+      filter["$or"] = [
+        {
+          name: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+      ];
+    }
+
+    const grades = await gradeService.findandfilterGrade(
+      filter,
+      options,
+    );
+
+    resp.status(200).json({ status: 200, data: grades });
+  } catch (error) {
+    return next(createError(error.status || 500, error.message));
+  }
+};

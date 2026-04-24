@@ -1,4 +1,9 @@
 import * as employeeService from '../services/employeeService.js'
+import { createError } from "../configs/errorConfig.js";
+import * as inventoryService from "../services/inventoryService.js";
+import { pick } from '../middleware/validate.js';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
 export const getEmployees = async (req, res, next) => {
   try {
@@ -54,3 +59,52 @@ export const deleteEmployee = async (req, res, next) => {
     next(err)
   }
 }
+
+
+export const findandfilterEmployees = async (req, resp, next) => {
+  try {
+    let filter = {
+      is_deleted: false,
+      schoolId: new ObjectId(req.user.schoolId),
+    };
+
+    for (let key in req.body.match_values) {
+      if (req.body.match_values[key] || req.body.match_values[key] === "") {
+        filter[key] = req.body.match_values[key];
+      }
+      if (ObjectId.isValid(req.body.match_values[key]))
+        filter[key] = new ObjectId(req.body.match_values[key]);
+      else if (Array.isArray(req.body.match_values[key]))
+        filter[key] = { $in: req.body.match_values[key] };
+    }
+    const options = pick(req.body, ["sortBy", "limit", "page"]);
+    if (req.body?.search) {
+      filter["$or"] = [
+        {
+          firstName: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+          {
+          lastName: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+          {
+          email: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+          {
+          phone: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+          {
+          staffNo: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+      ];
+    }
+console.log(filter)
+    const employees = await employeeService.findandfilterEmployee(
+      filter,
+      options,
+    );
+
+    resp.status(200).json({ status: 200, data: employees });
+  } catch (error) {
+    return next(createError(error.status || 500, error.message));
+  }
+};

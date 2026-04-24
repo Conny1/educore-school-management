@@ -1,4 +1,9 @@
 import Grade from '../models/Grade.js'
+import { createError } from "../configs/errorConfig.js";
+import * as inventoryService from "../services/inventoryService.js";
+import { pick } from '../middleware/validate.js';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 
 export const getAll = async (filters = {}) => {
   const query = { schoolId: filters.schoolId }
@@ -36,3 +41,36 @@ export const remove = async (id, schoolId) => {
   if (!grade) throw new Error('Grade not found')
   return grade
 }
+
+
+export const findandfilterGrade = async (filter, options) => {
+ const body = [
+      {
+      $lookup: {
+        from: "emplyees",
+        localField: "classTeacherId",
+        foreignField: "_id",
+        as: "classTeacher"
+      }
+    },
+    {
+      $unwind: {
+        path: "$classTeacher",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $addFields: {
+        classTeacher: {
+          _id: "$classTeacher._id",
+          name: { $concat: ["$classTeacher.firstName", " ", "$classTeacher.lastName"] },
+        }
+      }}
+  ]
+  const grade = await Grade.paginateLookup(filter, options, body);
+  if (!grade) {
+    throw createError(404, "grade not found.");
+  }
+  return grade;
+};
+

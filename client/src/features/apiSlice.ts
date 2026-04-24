@@ -54,7 +54,7 @@ export const apiSlice = createApi({
       query: () => "/students",
       providesTags: ["Student"],
     }),
-    createStudent: build.mutation<Student, Partial<Student>>({
+    createStudent: build.mutation<ApiResponse<Student>, Partial<Student>>({
       query: (body) => ({
         url: "/students",
         method: "POST",
@@ -62,21 +62,36 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Student"],
     }),
-    updateStudent: build.mutation<Student, { id: string; data: Partial<Student> }>({
-      query: ({ id, data }) => ({
-        url: `/students/${id}`,
-        method: "PATCH",
+    updateStudent: build.mutation<ApiResponse<Student>, Partial<Student> >({
+      query: (data) => ({
+        url: `/students/${data._id}`,
+        method: "PUT",
         body: data,
       }),
       invalidatesTags: ["Student"],
     }),
+     findAndfilterStudents: build.query<
+      {
+        success: boolean;
+        data: { results: Student[] } & pagination;
+      },
+      findandfilter
+    >({
+      query: (body) => ({
+        url: `/students/findandfilter`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["Student"],
+    }),
+    
 
     // Grades
-    getGrades: build.query<Grade[], void>({
+    getGrades: build.query<ApiResponse<Grade[]>, void>({
       query: () => "/grades",
       providesTags: ["Grade"],
     }),
-    createGrade: build.mutation<Grade, Partial<Grade>>({
+    createGrade: build.mutation<ApiResponse<Grade>, Partial<Grade>>({
       query: (body) => ({
         url: "/grades",
         method: "POST",
@@ -84,13 +99,35 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Grade"],
     }),
+      updateGrade: build.mutation<ApiResponse<Grade>, Partial<Grade> >({
+      query: (data) => ({
+        url: `/grades/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Grade"],
+    }),
+     findAndfilterGrades: build.query<
+      {
+        success: boolean;
+        data: { results: Grade[] } & pagination;
+      },
+      findandfilter
+    >({
+      query: (body) => ({
+        url: `/grades/findandfilter`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["Grade"],
+    }),
 
     // Employees
-    getEmployees: build.query<Employee[], void>({
+    getEmployees: build.query<ApiResponse<Employee[]>, void>({
       query: () => "/employees",
       providesTags: ["Employee"],
     }),
-    createEmployee: build.mutation<Employee, Partial<Employee>>({
+    createEmployee: build.mutation<ApiResponse<Employee>, Partial<Employee>>({
       query: (body) => ({
         url: "/employees",
         method: "POST",
@@ -98,10 +135,32 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Employee"],
     }),
+        updateEmployee: build.mutation<ApiResponse<Employee>, Partial<Employee> >({
+      query: (data) => ({
+        url: `/employees/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Employee"],
+    }),
+     findAndfilterEmployees: build.query<
+      {
+        success: boolean;
+        data: { results: Employee[] } & pagination;
+      },
+      findandfilter
+    >({
+      query: (body) => ({
+        url: `/employees/findandfilter`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["Employee"],
+    }),
 
     // Departments
-    getDepartments: build.query<Department[], void>({
-      query: () => "/finance/departments",
+    getDepartments: build.query<ApiResponse<Department[]>, void>({
+      query: () => "/departments",
       providesTags: ["Department"],
     }),
 
@@ -349,13 +408,22 @@ export const {
   useCreateAccountMutation,
   useGetauthuserQuery,
   useDashbardstatsQuery,
+  // student
   useGetStudentsQuery,
   useCreateStudentMutation,
   useUpdateStudentMutation,
+  useFindAndfilterStudentsQuery,
+  // grades
   useGetGradesQuery,
   useCreateGradeMutation,
+  useUpdateGradeMutation,
+  useFindAndfilterGradesQuery,
+  // employees
   useGetEmployeesQuery,
   useCreateEmployeeMutation,
+  useUpdateEmployeeMutation,
+  useFindAndfilterEmployeesQuery,
+  // departments
   useGetDepartmentsQuery,
   // payments
   useGetPaymentsQuery,

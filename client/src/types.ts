@@ -9,36 +9,41 @@ name: string;
 
 export interface Student {
   _id: string;
+  gradeId: string;
+  grade?:{_id?:string, name?:string, stream?:string};
+  admissionNo: string;
   firstName: string;
   lastName: string;
-  admissionNo: string;
-  gradeId?: string | any;
-  email?: string;
-  phone?: string;
-  status: string;
-  joinedAt?: string;
+  dob: string;
+  gender: 'male' | 'female';
+  guardianName: string;
+  guardianPhone: string;
+  status: 'active' | 'suspended' | 'transferred' | 'graduated';
+  enrolledAt: string;
 }
 
 export interface Grade {
   _id: string;
-  name: string;
-  stream: string;
-  classTeacherId?: string | any;
-  capacity?: number;
+  name: string;           // e.g. "Grade 4"
+  stream: string;         // e.g. "North", "South", or "" if no stream
+  level: string;
+  classTeacherId: string | null;
 }
 
 export interface Employee {
-  _id: string;
+   _id: string;
+  departmentId: string;
+  department:{_id?:string, name?:string}
+  gradeId: string | null;
+  grade:{_id?:string, name?:string};
+  staffNo: string;
   firstName: string;
   lastName: string;
-  email: string;
+  role: 'teacher' | 'admin' | 'support' | 'management' | 'finance';
   phone: string;
-  role: string;
-  designation: string;
-  departmentId?: string | any;
-  salary: number;
-  status: string;
-  joinedAt?: string;
+  email: string;
+  hireDate: string;
+  status: 'active' | 'inactive' | 'on_leave';
 }
 
 export interface Department {

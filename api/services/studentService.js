@@ -42,3 +42,36 @@ export const remove = async (id, schoolId) => {
   if (!student) throw new Error('Student not found')
   return student
 }
+
+
+export const findandfilterStudents = async (filter, options) => {
+  const body = [
+      {
+      $lookup: {
+        from: "grades",
+        localField: "gradeId",
+        foreignField: "_id",
+        as: "grade"
+      }
+    },
+    {
+      $unwind: {
+        path: "$grade",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $addFields: {
+        grade: {
+          _id: "$grade._id",
+          name: "$grade.name",
+          stream: "$grade.stream",
+        }
+      }}
+  ]
+  const student = await Student.paginateLookup(filter, options, body);
+  if (!student) {
+    throw createError(404, "student not found.");
+  }
+  return student;
+};

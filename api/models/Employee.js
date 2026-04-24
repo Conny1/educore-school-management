@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import paginate from './plugins/paginatePlugins.js';
 
 const EmployeeSchema = new mongoose.Schema({
   schoolId: { type: mongoose.Schema.Types.ObjectId, ref: 'School', required: true },
@@ -12,11 +13,12 @@ const EmployeeSchema = new mongoose.Schema({
   email: { type: String, required: true },
   hireDate: { type: String, required: true },
   status: { type: String, enum: ['active', 'inactive', 'on_leave'], default: 'active' },
-  is_deleted:{type:Boolean, default:true}
+  is_deleted:{type:Boolean, default:false}
 }, { timestamps: true })
 
 EmployeeSchema.index({ schoolId: 1, staffNo: 1 }, { unique: true })
 EmployeeSchema.index({ schoolId: 1, email: 1 }, { unique: true })
+EmployeeSchema.plugin(paginate);
 
 const Employee = mongoose.model('Employee', EmployeeSchema)
 export default Employee
