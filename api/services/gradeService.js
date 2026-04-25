@@ -44,29 +44,61 @@ export const remove = async (id, schoolId) => {
 
 
 export const findandfilterGrade = async (filter, options) => {
- const body = [
-      {
-      $lookup: {
-        from: "emplyees",
-        localField: "classTeacherId",
-        foreignField: "_id",
-        as: "classTeacher"
-      }
-    },
-    {
-      $unwind: {
-        path: "$classTeacher",
-        preserveNullAndEmptyArrays: true
-      }
-    },
-    {
-      $addFields: {
-        classTeacher: {
-          _id: "$classTeacher._id",
-          name: { $concat: ["$classTeacher.firstName", " ", "$classTeacher.lastName"] },
+const body = [
+  {
+    $lookup: {
+      from: "employees",
+      localField: "classTeacherId",
+      foreignField: "_id",
+      as: "classTeacher"
+    }
+  },
+
+  {
+    $lookup: {
+      from: "students",
+      let: { gradeId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: { $eq: ["$gradeId", "$$gradeId"] },
+            is_deleted: false,
+            status: { $ne: "transferred" }
+          }
+        },
+        { $count: "count" }
+      ],
+      as: "studentStats"
+    }
+  },
+
+  {
+    $addFields: {
+      studentCount: {
+        $ifNull: [{ $arrayElemAt: ["$studentStats.count", 0] }, 0]
+      },
+
+      // ✅ trim classTeacher WITHOUT losing grade fields
+      classTeacher: {
+        $let: {
+          vars: { t: { $arrayElemAt: ["$classTeacher", 0] } },
+          in: {
+            _id: "$$t._id",
+            firstName: "$$t.firstName",
+            lastName: "$$t.lastName"
+          }
         }
-      }}
-  ]
+      }
+    }
+  },
+
+  // ✅ ONLY remove what you don't want
+  {
+    $project: {
+      studentStats: 0
+    }
+  }
+];
   const grade = await Grade.paginateLookup(filter, options, body);
   if (!grade) {
     throw createError(404, "grade not found.");

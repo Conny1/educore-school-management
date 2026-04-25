@@ -13,7 +13,7 @@ router.get('/:id', gradeController.getGradeById)
 router.post('/', validate(createGradeSchema), gradeController.createGrade)
 router.put('/:id', validate(updateGradeSchema), gradeController.updateGrade)
 router.delete('/:id', gradeController.deleteGrade)
-router.post('/', validate(findandfilter), gradeController.findandfilterGrade)
+router.post('/findandfilter', validate(findandfilter), gradeController.findandfilterGrade)
 
 
 export default router

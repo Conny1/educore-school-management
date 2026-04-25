@@ -1,7 +1,7 @@
 import GradeFee from '../models/GradeFee.js'
 
 export const getAll = async (filters = {}) => {
-  const query = { schoolId: filters.schoolId }
+  const query = { schoolId: filters.schoolId, is_deleted:false }
   if (filters.gradeId) query.gradeId = filters.gradeId
   if (filters.term) query.term = filters.term
   if (filters.year) query.year = filters.year
@@ -25,7 +25,7 @@ export const update = async (id, data, schoolId) => {
 export const remove = async (id, schoolId) => {
   const fee = await GradeFee.findOneAndUpdate (
     { _id: id, schoolId },
-    {id_deleted:true},
+    {is_deleted:true},
     { new: true, runValidators: true }
   )
   if (!fee) throw new Error('GradeFee not found')

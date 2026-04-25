@@ -15,6 +15,7 @@ export const updateGradeFeeSchema = {
     id: Joi.string().required()
   }),
   body: Joi.object({
+    _id:Joi.string(),
     gradeId: Joi.string(),
     term: Joi.string().valid('Term 1', 'Term 2', 'Term 3'),
     year: Joi.string(),

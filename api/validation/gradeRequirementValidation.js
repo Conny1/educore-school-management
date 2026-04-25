@@ -17,6 +17,7 @@ export const updateGradeRequirementSchema = {
     id: Joi.string().required()
   }),
   body: Joi.object({
+    _id:Joi.string(),
     gradeId: Joi.string(),
     itemName: Joi.string(),
     requiredQty: Joi.number(),

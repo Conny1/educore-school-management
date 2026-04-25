@@ -7,7 +7,7 @@ const GradeFeeSchema = new mongoose.Schema({
   year: { type: String, required: true },
   amount: { type: Number, required: true },
   description: { type: String, default: '' },
-  id_deleted:{type:Boolean, default:false}
+  is_deleted:{type:Boolean, default:false}
 }, { timestamps: true })
 
 const GradeFee = mongoose.model('GradeFee', GradeFeeSchema)

@@ -4,7 +4,7 @@ export const getGradeRequirements = async (req, res, next) => {
   try {
     const data = await gradeRequirementService.getAll({ 
       ...req.query, 
-      schoolId: req.user.schoolId 
+      schoolId: req.user.schoolId ,
     })
     res.json({ success: true, data })
   } catch (err) {

@@ -1,66 +1,80 @@
-import * as gradeService from '../services/gradeService.js'
+import * as gradeService from "../services/gradeService.js";
 import { createError } from "../configs/errorConfig.js";
-import * as inventoryService from "../services/inventoryService.js";
-import { pick } from '../middleware/validate.js';
-import { Types } from 'mongoose';
+import * as employeeService from "../services/employeeService.js";
+import { pick } from "../middleware/validate.js";
+import { Types } from "mongoose";
 const { ObjectId } = Types;
 
 export const getGrades = async (req, res, next) => {
   try {
     const data = await gradeService.getAll({
       ...req.query,
-      schoolId: req.user.schoolId
-    })
-    res.json({ success: true, data })
+      schoolId: req.user.schoolId,
+    });
+
+    res.json({ success: true, data });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 export const getGradeById = async (req, res, next) => {
   try {
-    const data = await gradeService.getById(req.params.id, req.user.schoolId)
-    res.json({ success: true, data })
+    const data = await gradeService.getById(req.params.id, req.user.schoolId);
+    res.json({ success: true, data });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 export const createGrade = async (req, res, next) => {
   try {
     const data = await gradeService.create({
       ...req.body,
-      schoolId: req.user.schoolId
-    })
-    res.status(201).json({ success: true, data })
+      schoolId: req.user.schoolId,
+    });
+    if (data && data.classTeacherId) {
+      await employeeService.update(
+        data.classTeacherId,
+        { gradeId: data._id },
+        req.user.schoolId,
+      );
+    }
+    res.status(201).json({ success: true, data });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 export const updateGrade = async (req, res, next) => {
   try {
     const data = await gradeService.update(
       req.params.id,
       req.body,
-      req.user.schoolId
-    )
-    res.json({ success: true, data })
+      req.user.schoolId,
+    );
+
+    if (data && data.classTeacherId) {
+      await employeeService.update(
+        data.classTeacherId,
+        { gradeId: data._id },
+        req.user.schoolId,
+      );
+    }
+    res.json({ success: true, data });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 export const deleteGrade = async (req, res, next) => {
   try {
-    await gradeService.remove(req.params.id, req.user.schoolId)
-    res.json({ success: true, message: 'Grade deleted' })
+    await gradeService.remove(req.params.id, req.user.schoolId);
+    res.json({ success: true, message: "Grade deleted" });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
-
-
+};
 
 export const findandfilterGrade = async (req, resp, next) => {
   try {
@@ -87,10 +101,7 @@ export const findandfilterGrade = async (req, resp, next) => {
       ];
     }
 
-    const grades = await gradeService.findandfilterGrade(
-      filter,
-      options,
-    );
+    const grades = await gradeService.findandfilterGrade(filter, options);
 
     resp.status(200).json({ status: 200, data: grades });
   } catch (error) {

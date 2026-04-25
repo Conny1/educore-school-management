@@ -1,7 +1,7 @@
 import GradeRequirement from '../models/GradeRequirement.js'
 
 export const getAll = async (filters = {}) => {
-  const query = { schoolId: filters.schoolId }
+  const query = { schoolId: filters.schoolId, is_deleted:false }
   if (filters.gradeId) query.gradeId = filters.gradeId
   if (filters.isActive !== undefined) query.isActive = filters.isActive
   return await GradeRequirement.find(query).populate('gradeId', 'name stream')

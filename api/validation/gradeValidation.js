@@ -14,6 +14,7 @@ export const updateGradeSchema = {
     id: Joi.string().required()
   }),
   body: Joi.object({
+    _id:Joi.string(),
     name: Joi.string(),
     stream: Joi.string().allow(''),
     level: Joi.string(),
