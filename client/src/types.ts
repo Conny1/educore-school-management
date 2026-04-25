@@ -28,6 +28,29 @@ export interface Grade {
   stream: string;         // e.g. "North", "South", or "" if no stream
   level: string;
   classTeacherId: string | null;
+  classTeacher?:{_id?:string, firstName?:string, lastName?:string}
+  studentCount:number
+}
+
+export interface GradeFee {
+  _id: string;
+  gradeId: string;
+  term: 'Term 1' | 'Term 2' | 'Term 3';
+  year: string;
+  amount: number;         // e.g. 20000 (KES)
+  description: string;
+  createdAt: string;
+}
+
+export interface GradeRequirement {
+  _id: string;
+  gradeId: string;
+  itemName: string;       // e.g. "Tissue boxes"
+  requiredQty: number;
+  unit: string;           // e.g. "boxes", "reams", "pieces"
+  term: 'Term 1' | 'Term 2' | 'Term 3';
+  year: string;
+  isActive: boolean;
 }
 
 export interface Employee {

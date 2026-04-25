@@ -15,13 +15,15 @@ import {
   LoginResponse,
   ApiResponse,
   pagination,
-  findandfilter
+  findandfilter,
+  GradeFee,
+  GradeRequirement
 } from "../types";
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Student", "Grade", "Employee", "Department", "Payment", "Expense", "Attendance", "Inventory", "Supplier", "Project", "Timetable"],
+  tagTypes: ["User", "Student", "Grade","Grade-Requirements", "Grade-Fee", "Employee", "Department", "Payment", "Expense", "Attendance", "Inventory", "Supplier", "Project", "Timetable"],
   endpoints: (build) => ({
     // Auth
     createAccount: build.mutation<ApiResponse<User>, any>({
@@ -121,7 +123,64 @@ export const apiSlice = createApi({
       }),
       providesTags: ["Grade"],
     }),
-
+    // Grade-Fee
+      getGradesFee: build.query<ApiResponse<GradeFee[]>, string>({
+      query: (gradeId:string) => `grade-fees?gradeId=${gradeId}`,
+      providesTags: ["Grade-Fee"],
+    }),
+    createGradeFee: build.mutation<ApiResponse<GradeFee>, Partial<GradeFee>>({
+      query: (body) => ({
+        url: "/grade-fees",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Grade-Fee"],
+    }),
+      updateGradeFee: build.mutation<ApiResponse<GradeFee>, Partial<GradeFee> >({
+      query: (data) => ({
+        url: `/grade-fees/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Grade-Fee"],
+    }),
+    deleteGradeFee: build.mutation<ApiResponse<GradeFee>, string>({
+      query: (id) => ({
+        url: `/grade-fees/${id}`,
+        method: "DELETE",
+      
+      }),
+      invalidatesTags: ["Grade-Fee"],
+    }),
+// Grade- Requirements
+     getGradesRequirements: build.query<ApiResponse<GradeRequirement[]>, string>({
+      query: (gradeId) => `/grade-requirements?gradeId=${gradeId}`,
+      providesTags: ["Grade-Requirements"],
+    }),
+    createGradeRequirements: build.mutation<ApiResponse<GradeRequirement>, Partial<GradeRequirement>>({
+      query: (body) => ({
+        url: "/grade-requirements",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Grade-Requirements"],
+    }),
+      updateGradeRequirements: build.mutation<ApiResponse<GradeRequirement>, Partial<GradeRequirement> >({
+      query: (data) => ({
+        url: `/grade-requirements/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Grade-Requirements"],
+    }),
+        deleteGradeRequirements: build.mutation<ApiResponse<GradeRequirement>, string>({
+      query: (id) => ({
+        url: `/grade-requirements/${id}`,
+        method: "DELETE",
+      
+      }),
+      invalidatesTags: ["Grade-Requirements"],
+    }),
     // Employees
     getEmployees: build.query<ApiResponse<Employee[]>, void>({
       query: () => "/employees",
@@ -418,6 +477,16 @@ export const {
   useCreateGradeMutation,
   useUpdateGradeMutation,
   useFindAndfilterGradesQuery,
+  // Grade-Fees
+  useGetGradesFeeQuery,
+  useCreateGradeFeeMutation,
+  useUpdateGradeFeeMutation,
+  useDeleteGradeFeeMutation,
+  // Grade-Requirements
+  useGetGradesRequirementsQuery,
+  useCreateGradeRequirementsMutation,
+  useUpdateGradeRequirementsMutation,
+  useDeleteGradeRequirementsMutation,
   // employees
   useGetEmployeesQuery,
   useCreateEmployeeMutation,
