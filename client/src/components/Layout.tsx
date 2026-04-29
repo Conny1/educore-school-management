@@ -48,7 +48,7 @@ const navItems = [
   { id: "grades", label: "Grades", icon: BookOpen },
   { id: "employees", label: "Employees", icon: Briefcase },
   { id: "timetable", label: "Timetable", icon: Calendar },
-  { id: "attendance", label: "Attendance", icon: Clock },
+  // { id: "attendance", label: "Attendance", icon: Clock },
   { id: "payments", label: "Payments", icon: Wallet },
   { id: "expenses", label: "Expenses", icon: Receipt },
   { id: "inventory", label: "Inventory", icon: Package },

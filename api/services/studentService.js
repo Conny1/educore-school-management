@@ -4,7 +4,7 @@ export const getAll = async (filters = {}) => {
   const query = { schoolId: filters.schoolId }
   if (filters.gradeId) query.gradeId = filters.gradeId
   if (filters.status) query.status = filters.status
-  return await Student.find(query).populate('gradeId', 'name stream')
+  return await Student.find(query)
 }
 
 export const getById = async (id, schoolId) => {

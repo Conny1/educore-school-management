@@ -1,7 +1,7 @@
 import { createError } from "../configs/errorConfig.js";
 import * as inventoryService from "../services/inventoryService.js";
-import { pick } from '../middleware/validate.js';
-import { Types } from 'mongoose';
+import { pick } from "../middleware/validate.js";
+import { Types } from "mongoose";
 const { ObjectId } = Types;
 
 export const getInventory = async (req, res, next) => {
@@ -63,6 +63,9 @@ export const findandfilterInventory = async (req, resp, next) => {
       filter["$or"] = [
         {
           name: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
+        {
+          category: { $regex: ".*" + req.body.search + ".*", $options: "i" },
         },
       ];
     }

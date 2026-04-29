@@ -68,3 +68,13 @@ export const findandfilterPayments = async (req, resp, next) => {
   }
 };
 
+
+
+export const getStudentBalance = async (req, res, next)=>{
+    try {
+    const data = await paymentService.getStudentBalance(req.params.studentid)
+    res.json({ success: true, data })
+  } catch (err) {
+    next(err)
+  }
+}

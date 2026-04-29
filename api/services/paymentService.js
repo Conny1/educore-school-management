@@ -1,4 +1,6 @@
+import mongoose from 'mongoose'
 import Payment from '../models/Payment.js'
+import Student from '../models/Student.js'
 
 export const getAll = async (filters = {}) => {
   const query = { schoolId: filters.schoolId }
@@ -99,4 +101,87 @@ export const findandfilterPayments = async (filter, options) => {
   return payment;
 };
 
+export const getStudentBalance = async (studentId) => {
+  const stats = await Student.aggregate([
+    {
+      $match: { 
+        _id: new mongoose.Types.ObjectId(studentId),
+        is_deleted: false 
+      }
+    },
+    {
+      // 1. Get Grade Fees for the student's grade
+      $lookup: {
+        from: 'gradefees',
+        localField: 'gradeId',
+        foreignField: 'gradeId',
+        as: 'termFees'
+      }
+    },
+    {
+      // 2. Get all payments made by this student
+      $lookup: {
+        from: 'payments',
+        localField: '_id',
+        foreignField: 'studentId',
+        as: 'allPayments'
+      }
+    },
+    {
+      // 3. Flatten the fees so we can calculate per term
+      $unwind: "$termFees"
+    },
+    {
+      // 4. Filter payments that match the specific fee's Term and Year
+      $addFields: {
+        paymentsForThisTerm: {
+          $filter: {
+            input: "$allPayments",
+            as: "payment",
+            cond: { 
+              $and: [
+                { $eq: ["$$payment.paymentFor", "$termFees.term"] },
+                // Assuming payment object has a year field or extracted from paidAt
+                // If your payment schema doesn't have 'year', we match by 'paymentFor' string
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      // 5. Calculate totals for each term
+      $group: {
+        _id: {
+          studentId: "$_id",
+          term: "$termFees.term",
+          year: "$termFees.year"
+        },
+        studentName: { $first: { $concat: ['$firstName', ' ', '$lastName'] } },
+        admissionNo: { $first: "$admissionNo" },
+        amountOwed: { $first: "$termFees.amount" },
+        amountPaid: { $sum: { $reduce: {
+          input: "$paymentsForThisTerm",
+          initialValue: 0,
+          in: { $add: ["$$value", "$$this.amount"] }
+        }}},
+      }
+    },
+    {
+      // 6. Final Formatting
+      $project: {
+        _id: 0,
+        studentName: 1,
+        admissionNo: 1,
+        term: "$_id.term",
+        year: "$_id.year",
+        owed: "$amountOwed",
+        paid: "$amountPaid",
+        balance: { $subtract: ["$amountOwed", "$amountPaid"] }
+      }
+    },
+    { $sort: { year: -1, term: 1 } }
+  ]);
 
+  return stats;
+};

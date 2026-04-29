@@ -1,9 +1,15 @@
 import * as gradeFeeService from '../services/gradeFeeService.js'
 
 export const getGradeFees = async (req, res, next) => {
+  let filter = {}
+  for(let key in req.query){
+    if(req.query[key]){
+      filter[key] = req.query[key]
+    }
+  }
   try {
     const data = await gradeFeeService.getAll({ 
-      ...req.query, 
+      ...filter, 
       schoolId: req.user.schoolId 
     })
     res.json({ success: true, data })

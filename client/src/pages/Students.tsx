@@ -5,6 +5,7 @@ import { findandfilter, pagination, Student } from '@/types';
 import { useFindAndfilterStudentsQuery } from '../features/apiSlice';
 import PaginationBtn from '../components/shared/Pagination';
 import StudentFormModal from '../components/students/StudentFormModal';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -12,8 +13,7 @@ const Students: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
-
-
+  const navigate = useNavigate()
 
   const [paginationdata, setpaginationdata] = useState<pagination>({
     page: 1,
@@ -152,7 +152,9 @@ const Students: React.FC = () => {
                         >
                           <Edit2 size={16} />
                         </button>
-                        <button className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all" title="View Profile">
+                        <button onClick={()=>{
+                        navigate(`/students/${student._id}`)
+                        }} className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all" title="View Profile">
                           <Eye size={16} />
                         </button>
                         <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all" title="More">
@@ -181,6 +183,7 @@ const Students: React.FC = () => {
 
       {/* Add/Edit Modal */}
    <StudentFormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} editingStudent={editingStudent} setEditingStudent={setEditingStudent} />
+
     </div>
   );
 };

@@ -30,7 +30,7 @@ const Expenses: React.FC = () => {
   const [paginationdata, setpaginationdata] = useState<pagination>({
     page: 1,
     limit: 10,
-    totalPages: 0,
+    totalPages: 1,
     totalResults: 0,
   });
 
@@ -95,28 +95,7 @@ const Expenses: React.FC = () => {
 
       {/* Aggregate */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm col-span-1 md:col-span-2 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
-              <Receipt size={24} />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                Selected Total Expenditure
-              </p>
-              <p className="text-3xl font-black text-gray-900">
-                {formatCurrency(totalSpent)}
-              </p>
-            </div>
-          </div>
-          <div className="hidden sm:block text-right">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Transactions
-            </p>
-            <p className="text-xl font-bold text-gray-700">{30}</p>
-          </div>
-        </div>
-
+    
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
             Quick Filter

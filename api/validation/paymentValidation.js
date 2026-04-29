@@ -3,6 +3,7 @@ import Joi from 'joi'
 export const createPaymentSchema = {
   body: Joi.object({
     studentId: Joi.string().required(),
+    gradeFeeId: Joi.string().required(),
     receiptNo: Joi.string().required(),
     amount: Joi.number().required(),
     paymentFor: Joi.string().required(),

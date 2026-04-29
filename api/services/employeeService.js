@@ -105,3 +105,39 @@ export const findandfilterEmployee = async (filter, options) => {
   }
   return employee;
 };
+
+export const employeeStats = async(schoolId)=>{
+  const stats = await Employee.aggregate([
+  { 
+    // Filter to include only non-deleted employees
+    $match: { is_deleted: false, schoolId:schoolId} 
+  },
+  {
+    $facet: {
+      totalEmployees: [{ $count: "count" }],
+      activeEmployees: [
+        { $match: { status: 'active' } },
+        { $count: "count" }
+      ],
+      teachers: [
+        { $match: { role: 'teacher' } },
+        { $count: "count" }
+      ],
+      onLeave: [
+        { $match: { status: 'on_leave' } },
+        { $count: "count" }
+      ]
+    }
+  },
+  {
+    $project: {
+      total: { $arrayElemAt: ["$totalEmployees.count", 0] },
+      active: { $arrayElemAt: ["$activeEmployees.count", 0] },
+      teachers: { $arrayElemAt: ["$teachers.count", 0] },
+      onLeave: { $arrayElemAt: ["$onLeave.count", 0] }
+    }
+  }
+]);
+
+return stats[0]
+}

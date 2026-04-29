@@ -4,7 +4,7 @@ import { Search, Plus, Filter, Edit2, Eye, Mail, Phone, Briefcase } from 'lucide
 import { cn, formatDate } from '../lib/utils';
 import EmployeeFormModal from '../components/employees/EmployeeFormModal';
 import { Employee, findandfilter, pagination } from '@/types';
-import { useFindAndfilterEmployeesQuery } from '../features/apiSlice';
+import { useEmployeesStatsQuery, useFindAndfilterEmployeesQuery } from '../features/apiSlice';
 import PaginationBtn from '../components/shared/Pagination';
 
 
@@ -12,12 +12,13 @@ const Employees: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const {data:employeeStats} = useEmployeesStatsQuery()
 
 
   const [paginationdata, setpaginationdata] = useState<pagination>({
     page: 1,
     limit: 10,
-    totalPages: 0,
+    totalPages: 1,
     totalResults: 0,
   });
 
@@ -78,19 +79,19 @@ const Employees: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Total Staff</p>
-            <p className="text-xl font-bold text-gray-900">{employees.length}</p>
+            <p className="text-xl font-bold text-gray-900">{employeeStats?.data.total}</p>
          </div>
          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Active</p>
-            <p className="text-xl font-bold text-emerald-600">{employees.filter(e => e.status === 'active').length}</p>
+            <p className="text-xl font-bold text-emerald-600">{employeeStats?.data.active}</p>
          </div>
          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Teachers</p>
-            <p className="text-xl font-bold text-indigo-600">{employees.filter(e => e.role === 'teacher').length}</p>
+            <p className="text-xl font-bold text-indigo-600">{employeeStats?.data.teachers}</p>
          </div>
          <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">On Leave</p>
-            <p className="text-xl font-bold text-amber-600">{employees.filter(e => e.status === 'on_leave').length}</p>
+            <p className="text-xl font-bold text-amber-600">{employeeStats?.data.onLeave}</p>
          </div>
       </div>
 

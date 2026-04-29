@@ -1,12 +1,14 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Payment } from "@/types";
+import { GradeFee, Payment } from "@/types";
 import { Modal } from "../Modal";
 import {
   useCreatePaymentMutation,
+  useGetGradesFeeQuery,
   useGetStudentsQuery,
+  useLazyGetGradesFeeQuery,
 } from "../../features/apiSlice";
 import { Banknote, CreditCard, Landmark, Smartphone } from "lucide-react";
 import { toast } from "react-toastify";
@@ -24,12 +26,12 @@ const paymentSchema = yup.object().shape({
     .string()
     .oneOf(["cash", "mpesa", "bank_transfer", "cheque"])
     .required("Method is required"),
-reference: yup.string().when("method", {
-  is: "mpesa",
-  then: (schema) => schema.required("Reference is required"),
-  otherwise: (schema) => schema.nullable().notRequired(),
-}),
- paidAt: yup.string().required("Payment date is required"),
+  reference: yup.string().when("method", {
+    is: "mpesa",
+    then: (schema) => schema.required("Reference is required"),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+  paidAt: yup.string().required("Payment date is required"),
 });
 
 type Props = {
@@ -48,9 +50,11 @@ const PaymentFormModal = ({ isModalOpen, setIsModalOpen }: Props) => {
     defaultValues: {
       paidAt: new Date().toISOString().split("T")[0],
       method: "mpesa",
-      receiptNo:generateRandomId("RCP")
+      receiptNo: generateRandomId("RCP"),
     },
   });
+  const [getFeesByGrade] = useLazyGetGradesFeeQuery();
+  const [fees, setfees] = useState<GradeFee[]>([]);
   const [createPayment, { isLoading: creating }] = useCreatePaymentMutation();
   const { data: studentData } = useGetStudentsQuery();
   const students = useMemo(() => studentData?.data || [], [studentData?.data]);
@@ -58,9 +62,13 @@ const PaymentFormModal = ({ isModalOpen, setIsModalOpen }: Props) => {
   const selectedMethod = watch("method");
 
   const onSubmit = async (data: Partial<Payment>) => {
-    const newinv = await createPayment(data);
+    const newinv = await createPayment({
+      ...data,
+      gradeFeeId: data.paymentFor,
+    });
     if (newinv.data?.success) {
-      toast.success("New inventory created");
+      toast.success("payments created");
+      reset({ receiptNo: generateRandomId("RCP") });
     } else {
       toast.error("Failed. Try again");
     }
@@ -82,7 +90,20 @@ const PaymentFormModal = ({ isModalOpen, setIsModalOpen }: Props) => {
               Select Student
             </label>
             <select
-              {...register("studentId")}
+              {...(register("studentId", {
+                  onChange:(e)=> {
+                  let grade = students.find(
+                    (item) => item._id === e.target.value,
+                  );
+                  if (grade) {
+                    getFeesByGrade(grade.gradeId).then((resp)=>{
+                      if(resp.data?.success){
+                        setfees(resp.data?.data || [])
+                      }
+                    })
+                  }
+                },
+              }))}
               className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm"
             >
               <option value="">Choose a student...</option>
@@ -126,11 +147,18 @@ const PaymentFormModal = ({ isModalOpen, setIsModalOpen }: Props) => {
             <label className="text-sm font-bold text-gray-700">
               Payment Purpose
             </label>
-            <input
+            <select
               {...register("paymentFor")}
-              placeholder="e.g. Term 2 Fees"
               className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm"
-            />
+            >
+              {fees.map((item) => {
+                return (
+                  <option value={item._id}>
+                    fees for {item.term}- Year- {item.year}
+                  </option>
+                );
+              })}
+            </select>
           </div>
 
           <div className="space-y-4">

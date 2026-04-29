@@ -5,6 +5,7 @@ export const getAll = async (filters = {}) => {
   if (filters.gradeId) query.gradeId = filters.gradeId
   if (filters.term) query.term = filters.term
   if (filters.year) query.year = filters.year
+  console.log(filters)
   return await GradeFee.find(query).populate('gradeId', 'name stream')
 }
 

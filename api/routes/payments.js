@@ -11,5 +11,7 @@ router.get('/', paymentController.getPayments)
 router.post('/', validate(createPaymentSchema), paymentController.createPayment)
 router.post('/findandfilter', validate(  findandfilter), paymentController.findandfilterPayments)
 router.delete('/:id', paymentController.deletePayment)
+router.get('/student-balance/:studentid', paymentController.getStudentBalance)
+
 
 export default router

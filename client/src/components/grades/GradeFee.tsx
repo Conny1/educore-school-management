@@ -24,7 +24,6 @@ interface Props {
 const GradeFeesManager: React.FC<Props> = ({gradeId}) => {
   const [editingFee, setEditingFee] = useState<GradeFee | null>(null);
   const {data:feesData} = useGetGradesFeeQuery(gradeId)
-  console.log("rendering", gradeId)
   const fees = useMemo(() => feesData?.data || [], [feesData?.data])
   const [createGradeFees, {isLoading:creating}] = useCreateGradeFeeMutation()
   const [updateGradeFees, {isLoading:updating}] = useUpdateGradeFeeMutation()
@@ -71,11 +70,6 @@ const GradeFeesManager: React.FC<Props> = ({gradeId}) => {
     }
 
   
-
-  const handleEdit = (fee: GradeFee) => {
-    setEditingFee(fee);
-    reset(fee);
-  };
 
   return (
     <div className="space-y-6">
@@ -128,13 +122,7 @@ const GradeFeesManager: React.FC<Props> = ({gradeId}) => {
                 <td className="px-4 py-3 text-gray-500">{fee.description}</td>
                 <td className="px-4 py-3 text-right flex justify-end gap-2">
                   
-                  {/* EDIT */}
-                  <button
-                    onClick={() => handleEdit(fee)}
-                    className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"
-                  >
-                    <Edit2 size={14} />
-                  </button>
+              
 
                   {/* DELETE */}
                   <button

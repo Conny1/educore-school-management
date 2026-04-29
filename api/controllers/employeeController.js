@@ -114,9 +114,11 @@ export const findandfilterEmployees = async (req, resp, next) => {
         {
           staffNo: { $regex: ".*" + req.body.search + ".*", $options: "i" },
         },
+         {
+          role: { $regex: ".*" + req.body.search + ".*", $options: "i" },
+        },
       ];
     }
-    console.log(filter);
     const employees = await employeeService.findandfilterEmployee(
       filter,
       options,
@@ -127,3 +129,12 @@ export const findandfilterEmployees = async (req, resp, next) => {
     return next(createError(error.status || 500, error.message));
   }
 };
+
+ export const employeeStats =async (req,res,next)=>{
+    try {
+    const data = await employeeService.employeeStats(req.user.schoolId);
+    res.json({ success: true, data});
+  } catch (err) {
+    next(err);
+  }
+}

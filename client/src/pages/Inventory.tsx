@@ -23,7 +23,7 @@ const Inventory: React.FC = () => {
   const [paginationdata, setpaginationdata] = useState<pagination>({
     page: 1,
     limit: 10,
-    totalPages: 0,
+    totalPages: 1,
     totalResults: 0,
   });
 
@@ -85,74 +85,6 @@ const Inventory: React.FC = () => {
           <Plus size={20} />
           New Inventory Item
         </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
-            <Archive size={24} />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Total SKU Items
-            </p>
-            <p className="text-2xl font-black text-gray-900">
-              {inventories.length}
-            </p>
-          </div>
-        </div>
-
-        <div
-          className={cn(
-            "p-6 rounded-2xl border shadow-md flex items-center gap-4 transition-all",
-            lowStockCount > 0
-              ? "bg-amber-50 border-amber-200"
-              : "bg-white border-gray-100 shadow-sm",
-          )}
-        >
-          <div
-            className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center",
-              lowStockCount > 0
-                ? "bg-amber-100 text-amber-600"
-                : "bg-gray-50 text-gray-400",
-            )}
-          >
-            <AlertCircle size={24} />
-          </div>
-          <div>
-            <p
-              className={cn(
-                "text-[10px] font-bold uppercase tracking-widest",
-                lowStockCount > 0 ? "text-amber-500" : "text-gray-400",
-              )}
-            >
-              Low Stock Alerts
-            </p>
-            <p
-              className={cn(
-                "text-2xl font-black",
-                lowStockCount > 0 ? "text-amber-700" : "text-gray-900",
-              )}
-            >
-              {lowStockCount} Items
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-            <Package size={24} />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Total Value
-            </p>
-            <p className="text-2xl font-black text-emerald-700">
-              {formatCurrency(300000)}
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4 items-center">

@@ -1,7 +1,7 @@
-export type role = 'superadmin'| 'admin'| 'teacher'|'finance'
+export type role = "superadmin" | "admin" | "teacher" | "finance";
 export interface User {
   _id: string;
-name: string;
+  name: string;
   email: string;
   role: role;
   schoolId: string;
@@ -10,34 +10,34 @@ name: string;
 export interface Student {
   _id: string;
   gradeId: string;
-  grade?:{_id?:string, name?:string, stream?:string};
+  grade?: { _id?: string; name?: string; stream?: string };
   admissionNo: string;
   firstName: string;
   lastName: string;
   dob: string;
-  gender: 'male' | 'female';
+  gender: "male" | "female";
   guardianName: string;
   guardianPhone: string;
-  status: 'active' | 'suspended' | 'transferred' | 'graduated';
+  status: "active" | "suspended" | "transferred" | "graduated";
   enrolledAt: string;
 }
 
 export interface Grade {
   _id: string;
-  name: string;           // e.g. "Grade 4"
-  stream: string;         // e.g. "North", "South", or "" if no stream
+  name: string; // e.g. "Grade 4"
+  stream: string; // e.g. "North", "South", or "" if no stream
   level: string;
   classTeacherId: string | null;
-  classTeacher?:{_id?:string, firstName?:string, lastName?:string}
-  studentCount:number
+  classTeacher?: { _id?: string; firstName?: string; lastName?: string };
+  studentCount: number;
 }
 
 export interface GradeFee {
   _id: string;
   gradeId: string;
-  term: 'Term 1' | 'Term 2' | 'Term 3';
+  term: "Term 1" | "Term 2" | "Term 3";
   year: string;
-  amount: number;         // e.g. 20000 (KES)
+  amount: number; // e.g. 20000 (KES)
   description: string;
   createdAt: string;
 }
@@ -45,28 +45,35 @@ export interface GradeFee {
 export interface GradeRequirement {
   _id: string;
   gradeId: string;
-  itemName: string;       // e.g. "Tissue boxes"
+  itemName: string; // e.g. "Tissue boxes"
   requiredQty: number;
-  unit: string;           // e.g. "boxes", "reams", "pieces"
-  term: 'Term 1' | 'Term 2' | 'Term 3';
+  unit: string; // e.g. "boxes", "reams", "pieces"
+  term: "Term 1" | "Term 2" | "Term 3";
   year: string;
   isActive: boolean;
 }
 
 export interface Employee {
-   _id: string;
+  _id: string;
   departmentId: string;
-  department:{_id?:string, name?:string}
+  department: { _id?: string; name?: string };
   gradeId: string | null;
-  grade:{_id?:string, name?:string};
+  grade: { _id?: string; name?: string };
   staffNo: string;
   firstName: string;
   lastName: string;
-  role: 'teacher' | 'admin' | 'support' | 'management' | 'finance';
+  role: "teacher" | "admin" | "support" | "management" | "finance";
   phone: string;
   email: string;
   hireDate: string;
-  status: 'active' | 'inactive' | 'on_leave';
+  status: "active" | "inactive" | "on_leave";
+}
+
+export interface employeeStats {
+  total: number;
+  active: number;
+  teachers: number;
+  onLeave: number;
 }
 
 export interface Department {
@@ -78,16 +85,33 @@ export interface Department {
 export interface Payment {
   _id: string;
   studentId: string;
-  student?:{firstName?:string, lastName?:string,admissionNo?:string, _id?:string, grade?:{name?:string, _id?:string}}
+  student?: {
+    firstName?: string;
+    lastName?: string;
+    admissionNo?: string;
+    _id?: string;
+    grade?: { name?: string; _id?: string };
+  };
   receiptNo: string;
   amount: number;
   paymentFor: string;
-  method: 'cash' | 'mpesa' | 'bank_transfer' | 'cheque';
+  method: "cash" | "mpesa" | "bank_transfer" | "cheque";
   reference?: string;
   paidAt: string;
   recordedBy: string;
+  gradeFeeId: string;
 }
 
+export interface studentBalance {
+  studentName: string;
+  admissionNo: string;
+  grade: string;
+  owed: number;
+  paid: number;
+  balance: number;
+  "term": string,
+    "year": string,
+}
 export interface Expense {
   _id: string;
   supplierId: string | null;
@@ -97,7 +121,7 @@ export interface Expense {
   amount: number;
   expenseDate: string;
   receiptNo: string;
-  status: 'pending' | 'approved' | 'paid';
+  status: "pending" | "approved" | "paid";
 }
 
 export interface InventoryItem {
@@ -119,16 +143,15 @@ export interface Supplier {
   phone: string;
   email: string;
   category: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
 }
-
 
 export interface Project {
   _id: string;
   title: string;
   description: string;
   budget: number;
-  status: 'planning' | 'active' | 'on_hold' | 'completed' | 'cancelled';
+  status: "planning" | "active" | "on_hold" | "completed" | "cancelled";
   startDate: string;
   endDate: string;
   managedBy: string;
@@ -182,4 +205,3 @@ export type pagination = {
   totalPages: number;
   totalResults: number;
 };
-

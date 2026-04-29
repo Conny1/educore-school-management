@@ -15,6 +15,7 @@ import Suppliers from "./pages/Suppliers";
 import Projects from "./pages/Projects";
 import Reports from "./pages/Reports";
 import Login from "./pages/Login";
+import StudentProfile from "./pages/StudentProfile";
 
 export default function App() {
   return (
@@ -28,6 +29,8 @@ export default function App() {
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
+                    <Route path="/students/:id" element={<StudentProfile/>} />
+
           <Route path="/grades" element={<Grades />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/timetable" element={<Timetable />} />
