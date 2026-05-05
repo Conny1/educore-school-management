@@ -20,7 +20,7 @@ const InventoryItemSchema = new mongoose.Schema(
     unitCost: { type: Number, required: true },
     unit: { type: String, required: true },
     lastUpdated: { type: String, required: true },
-    is_deleted: { type: String, default: false },
+    is_deleted: { type: Boolean, default: false },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Employee",

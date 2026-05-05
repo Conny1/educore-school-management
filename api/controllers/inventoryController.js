@@ -89,3 +89,12 @@ export const deleteInventory = async (req, res, next) => {
     next(err);
   }
 };
+
+export const inventoryAlerts = async (req, res, next) => {
+  try {
+    const data = await inventoryService.inventoryAlerts(req.user.schoolId);
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+}

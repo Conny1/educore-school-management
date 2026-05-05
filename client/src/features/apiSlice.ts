@@ -20,6 +20,9 @@ import {
   GradeRequirement,
   employeeStats,
   studentBalance,
+  InventoryAlerts,
+  dashbardstats,
+  studentFinancial,
 } from "../types";
 
 export const apiSlice = createApi({
@@ -72,6 +75,14 @@ export const apiSlice = createApi({
     getStudents: build.query<ApiResponse<Student[]>, void>({
       query: () => "/students",
       providesTags: ["Student"],
+    }),
+        getStudentById: build.query<ApiResponse<Student>, string>({
+      query: (id) => `/students/${id}`,
+      providesTags: ["Student"],
+    }),
+       getStudentFinancial: build.query<ApiResponse<studentFinancial[]>, string>({
+      query: (id) => `/students/financial/${id}`,
+      providesTags: ["Payment"],
     }),
     createStudent: build.mutation<ApiResponse<Student>, Partial<Student>>({
       query: (body) => ({
@@ -361,6 +372,10 @@ export const apiSlice = createApi({
       query: () => "/inventory",
       providesTags: ["Inventory"],
     }),
+      getInventoryAlerts: build.query<ApiResponse<InventoryAlerts[]>, void>({
+      query: () => "/inventory/alerts",
+      providesTags: ["Inventory"],
+    }),
     createInventoryItem: build.mutation<
       ApiResponse<InventoryItem>,
       Partial<InventoryItem>
@@ -497,6 +512,9 @@ export const apiSlice = createApi({
     getReportSummary: build.query<any, void>({
       query: () => "/reports/summary",
     }),
+     getDashboardSummary: build.query<ApiResponse<dashbardstats>, void>({
+      query: () => "/reports/dashboard",
+    }),
   }),
 });
 
@@ -510,6 +528,8 @@ export const {
   useCreateStudentMutation,
   useUpdateStudentMutation,
   useFindAndfilterStudentsQuery,
+  useGetStudentByIdQuery,
+  useGetStudentFinancialQuery,
   // grades
   useGetGradesQuery,
   useCreateGradeMutation,
@@ -554,6 +574,7 @@ export const {
   useFindAndfilterInventoryItemQuery,
   useDeleteInventoryItemMutation,
   useUpdateInventoryItemMutation,
+  useGetInventoryAlertsQuery,
   // supplier
   useGetSuppliersQuery,
   useCreateSupplierMutation,
@@ -567,5 +588,7 @@ export const {
   useUpdateProjectMutation,
   // timetable
   useGetTimetableQuery,
+  // reports
   useGetReportSummaryQuery,
+  useGetDashboardSummaryQuery,
 } = apiSlice;

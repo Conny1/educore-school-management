@@ -29,7 +29,7 @@ const Students: React.FC = () => {
     search: "",
     match_values: {},
   });
-  const { data,  isLoading:inventoryLoading } = useFindAndfilterStudentsQuery(filters);
+  const { data,  isLoading:studentLoading } = useFindAndfilterStudentsQuery(filters);
   const students = useMemo(() => {
     if(data?.success){
       setpaginationdata({    page: data.data.page,

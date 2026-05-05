@@ -11,5 +11,6 @@ router.post('/', validate(createInventorySchema), inventoryController.createInve
 router.put('/:id', inventoryController.updateInventoryItem)
 router.post('/findandfilter',validate(findandfilter), inventoryController.findandfilterInventory)
 router.delete('/:id', inventoryController.deleteInventory)
+router.get('/alerts', inventoryController.inventoryAlerts)
 
 export default router

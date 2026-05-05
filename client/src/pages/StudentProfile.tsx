@@ -2,37 +2,23 @@ import React, { useMemo } from 'react';
 import { 
   User, Phone, Calendar, Hash, MapPin, 
   Wallet, CheckCircle2, AlertCircle, PackageCheck, 
-  History, TrendingUp, Info 
+  History, TrendingUp, Info, 
+  Search
 } from 'lucide-react';
 import { cn, formatCurrency, formatDate } from '../lib/utils';
 import { Badge } from '../components/Badge';
+import { useParams } from 'react-router-dom';
+import { useGetStudentByIdQuery, useGetStudentFinancialQuery } from '../features/apiSlice';
+import { FullPageLoading } from '../components/shared/Loading';
 
 
 const StudentProfile = () => {
-  // --- MOCK DATA ---
-  const student = {
-    _id: "s1",
-    firstName: "Jane",
-    lastName: "Doe",
-    admissionNo: "ADM/2024/042",
-    gender: "female",
-    dob: "2012-05-14",
-    guardianName: "Richard Doe",
-    guardianPhone: "+254 712 345 678",
-    status: "active",
-    enrolledAt: "2024-01-08",
-    gradeName: "Grade 4 East"
-  };
+  const params = useParams() as {id:string}
+  const {data, isLoading:studentLoading} = useGetStudentByIdQuery(params.id )
+  const {data:financial} = useGetStudentFinancialQuery(params.id)
+  const student = useMemo(() => data?.data, [data?.data])
 
-  const gradeFees = [
-    { _id: "f1", term: "Term 1", year: "2024", amount: 25000 },
-    { _id: "f2", term: "Term 2", year: "2024", amount: 25000 },
-  ];
-
-  const payments = [
-    { receiptNo: "RCT-9901", amount: 25000, paymentFor: "Term 1", paidAt: "2024-01-10", method: "mpesa" },
-    { receiptNo: "RCT-1042", amount: 12000, paymentFor: "Term 2", paidAt: "2024-05-15", method: "bank_transfer" },
-  ];
+// Mock data
 
   const requirements = [
     { _id: "r1", itemName: "Exercise Books", requiredQty: 12, unit: "pcs", term: "Term 1", year: "2024" },
@@ -47,13 +33,8 @@ const StudentProfile = () => {
 
   // --- LOGIC ---
   const termlyFinancials = useMemo(() => {
-    return gradeFees.map(fee => {
-      const paid = payments
-        .filter(p => p.paymentFor === fee.term)
-        .reduce((sum, p) => sum + p.amount, 0);
-      return { ...fee, paid, balance: fee.amount - paid };
-    });
-  }, [gradeFees, payments]);
+    return financial?.data || []
+  }, [financial?.data]);
 
   const reqStatus = useMemo(() => {
     return requirements.map(req => {
@@ -63,6 +44,31 @@ const StudentProfile = () => {
       return { ...req, brought, isComplete: brought >= req.requiredQty };
     });
   }, [requirements, requirementLogs]);
+
+
+
+
+    if(studentLoading) return <FullPageLoading title="Loading student information"/>
+
+if (!student) {
+  return (
+    <div className="min-h-[400px] flex flex-col items-center justify-center p-8 text-center bg-white rounded-3xl border border-dashed border-gray-200">
+      <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-4 animate-pulse">
+        <Search size={40} />
+      </div>
+      <h3 className="text-xl font-bold text-gray-900">Student Not Found</h3>
+      <p className="text-gray-500 max-w-xs mx-auto mt-2 text-sm">
+        We couldn't find a student with that ID. They may have been deleted or moved to a different school.
+      </p>
+      <button 
+        onClick={() => window.history.back()}
+        className="mt-6 px-6 py-2 bg-gray-900 text-white rounded-xl font-bold text-sm hover:bg-gray-800 transition-all active:scale-95"
+      >
+        Go Back
+      </button>
+    </div>
+  );
+}
 
   return (
     
@@ -80,7 +86,7 @@ const StudentProfile = () => {
           <div className="w-full mt-8 space-y-4 text-left border-t pt-6">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400"><TrendingUp size={16}/></div>
-              <div><p className="text-[10px] uppercase font-bold text-gray-400">Current Grade</p><p className="text-sm font-bold text-gray-700">{student.gradeName}</p></div>
+              <div><p className="text-[10px] uppercase font-bold text-gray-400">Current Grade</p><p className="text-sm font-bold text-gray-700">{student.grade?.name}</p></div>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400"><Phone size={16}/></div>

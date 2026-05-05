@@ -34,4 +34,13 @@ export const getRequirementReport = async (req, res, next) => {
   } catch (err) {
     next(err)
   }
-}
+} 
+
+export const dashbardSummary = async (req, res, next) => {
+  try {
+    const data = await reportService.dashbardSummary( req.user.schoolId )
+    res.json({ success: true, data })
+  } catch (err) {
+    next(err)
+  }
+} 

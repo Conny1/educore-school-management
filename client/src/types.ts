@@ -21,7 +21,14 @@ export interface Student {
   status: "active" | "suspended" | "transferred" | "graduated";
   enrolledAt: string;
 }
-
+export interface studentFinancial {
+  term:string;
+  year:string,
+  amount:number,
+  paid:number,
+  balance:number
+  _id:string
+}
 export interface Grade {
   _id: string;
   name: string; // e.g. "Grade 4"
@@ -109,8 +116,8 @@ export interface studentBalance {
   owed: number;
   paid: number;
   balance: number;
-  "term": string,
-    "year": string,
+  term: string;
+  year: string;
 }
 export interface Expense {
   _id: string;
@@ -134,6 +141,17 @@ export interface InventoryItem {
   unitCost: number;
   unit: string;
   lastUpdated: string;
+}
+
+export interface InventoryAlerts {
+  _id: string;
+  name: string;
+  quantity: number;
+  reorderLevel: number;
+  unit: string;
+  shortfall: string;
+  supplierName: string;
+  supplierContact: string;
 }
 
 export interface Supplier {
@@ -205,3 +223,8 @@ export type pagination = {
   totalPages: number;
   totalResults: number;
 };
+
+export type dashbardstats  ={
+  studentCount:number;
+  staffCount:number
+}

@@ -96,4 +96,14 @@ export const findandfilterStudents = async (req, resp, next) => {
   } catch (error) {
     return next(createError(error.status || 500, error.message));
   }
+}; 
+
+export const getStudentTermlyFinancials = async (req, res, next) => {
+  try {
+    const data = await studentService.getStudentTermlyFinancials(req.params.studentId);
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
 };
+

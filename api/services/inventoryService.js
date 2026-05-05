@@ -38,3 +38,55 @@ export const delet = async (id, schoolId) => {
   return inventory
 }
 
+
+export const inventoryAlerts = async ( schoolId) => {
+const inventory = await InventoryItem.aggregate([
+  {
+    $match: {
+      is_deleted: false, // Ensure we aren't looking at deleted items
+      schoolId:schoolId,
+      $expr: {
+        $lte: ["$quantity", "$reorderLevel"] // Quantity <= Reorder Level
+      }
+    }
+  },
+  {
+    // Optional: Sort by urgency (how far below reorder level they are)
+    $addFields: {
+      shortfall: { $subtract: ["$reorderLevel", "$quantity"] }
+    }
+  },
+  {
+    $sort: { shortfall: -1 }
+  },
+  {
+    // Optional: Join with supplier info to know who to call
+    $lookup: {
+      from: "suppliers",
+      localField: "supplierId",
+      foreignField: "_id",
+      as: "supplierDetails"
+    }
+  },
+  {
+    $unwind: {
+      path: "$supplierDetails",
+      preserveNullAndEmptyArrays: true
+    }
+  },
+  {
+    $project: {
+      name: 1,
+      quantity: 1,
+      reorderLevel: 1,
+      unit: 1,
+      shortfall: 1,
+      supplierName: "$supplierDetails.name",
+      supplierContact: "$supplierDetails.phone"
+    }
+  }
+]);
+
+return  inventory
+}
+

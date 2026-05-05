@@ -1,12 +1,13 @@
+import mongoose from 'mongoose'
 import GradeFee from '../models/GradeFee.js'
 
 export const getAll = async (filters = {}) => {
   const query = { schoolId: filters.schoolId, is_deleted:false }
-  if (filters.gradeId) query.gradeId = filters.gradeId
+  if (filters.gradeId) query.gradeId =  new mongoose.Types.ObjectId(filters.gradeId)
   if (filters.term) query.term = filters.term
   if (filters.year) query.year = filters.year
-  console.log(filters)
-  return await GradeFee.find(query).populate('gradeId', 'name stream')
+  console.log(query)
+  return await GradeFee.find(query)
 }
 
 export const create = async (data) => {

@@ -34,7 +34,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         className
       )}
     >
-      <span className="text-[0.75rem] font-semibold text-text-muted uppercase tracking-wider">{title}</span>
+      <span className="text-[0.75rem] font-semibold text-text-muted uppercase tracking-wider">  {title}</span>
       <div className="text-2xl font-extrabold text-[#1e293b]">{value}</div>
       {trend && (
         <span className={cn(

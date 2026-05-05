@@ -14,5 +14,6 @@ router.post('/', validate(createStudentSchema), studentController.createStudent)
 router.put('/:id', validate(updateStudentSchema), studentController.updateStudent)
 router.delete('/:id', studentController.deleteStudent)
 router.post('/findandfilter', validate(findandfilter), studentController.findandfilterStudents)
+router.get('/financial/:studentId', studentController.getStudentTermlyFinancials)
 
 export default router

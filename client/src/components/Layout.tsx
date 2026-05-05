@@ -54,7 +54,7 @@ const navItems = [
   { id: "inventory", label: "Inventory", icon: Package },
   { id: "suppliers", label: "Suppliers", icon: Truck },
   { id: "projects", label: "Projects", icon: KanbanSquare },
-  { id: "reports", label: "Reports", icon: FileText },
+  // { id: "reports", label: "Reports", icon: FileText },
 ];
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -67,6 +67,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [activeTab, setactiveTab] = useState(pathName);
   const dispatch = useDispatch();
   const navigate = useNavigate()
+
+    const { data: authUser } = useGetauthuserQuery();
+    useMemo(() => {
+      if (authUser?.data) {
+        dispatch(updateUserData(authUser?.data));
+      }
+      return authUser?.data;
+    }, [authUser?.data]);
 
 
   useEffect(() => {

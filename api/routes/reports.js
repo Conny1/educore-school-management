@@ -9,5 +9,6 @@ router.get('/fees', reportController.getFeeCollectionReport)
 router.get('/attendance', reportController.getAttendanceReport)
 router.get('/expenses', reportController.getExpenseReport)
 router.get('/requirements', reportController.getRequirementReport)
+router.get('/dashboard', reportController.dashbardSummary)
 
 export default router

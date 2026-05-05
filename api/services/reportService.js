@@ -6,6 +6,7 @@ import Expense from '../models/Expense.js'
 import GradeRequirement from '../models/GradeRequirement.js'
 import StudentRequirementLog from '../models/StudentRequirementLog.js'
 import Student from '../models/Student.js'
+import Employee from '../models/Employee.js'
 
 export const getFeeCollection = async ({ schoolId, term, year }) => {
   const fees = await GradeFee.find({ schoolId, term, year }).populate('gradeId', 'name stream')
@@ -62,4 +63,17 @@ export const getRequirementFulfillment = async ({ schoolId, gradeId, term, year 
       notBrought: none
     }
   }))
+}
+
+export const dashbardSummary = async(schoolId)=>{
+  const [studentCount, staffCount] = await Promise.all([
+    Student.countDocuments({schoolId, is_deleted:false, status:"active"}),
+    Employee.countDocuments({schoolId, status:{$ne:"inactive"}})
+  ])
+
+  return {
+    studentCount,
+    staffCount
+  }
+
 }
