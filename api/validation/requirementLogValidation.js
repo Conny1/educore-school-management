@@ -7,6 +7,5 @@ export const createRequirementLogSchema = {
     qtyBrought: Joi.number().required(),
     dateRecorded: Joi.string().required(),
     remarks: Joi.string().allow(''),
-    recordedBy: Joi.string().required()
   })
 }

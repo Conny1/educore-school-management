@@ -107,3 +107,12 @@ export const getStudentTermlyFinancials = async (req, res, next) => {
   }
 };
 
+
+export const getStudentRequirementStatus = async (req, res, next) => {
+  try {
+    const data = await studentService.getStudentRequirementStatus(req.params.studentId);
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};

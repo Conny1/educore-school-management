@@ -11,7 +11,7 @@ export const getRequirementLogs = async (req, res, next) => {
 
 export const createRequirementLog = async (req, res, next) => {
   try {
-    const data = await requirementLogService.create({ ...req.body, schoolId: req.user.schoolId })
+    const data = await requirementLogService.create({ ...req.body, schoolId: req.user.schoolId, recordedBy:req.user._id })
     res.status(201).json({ success: true, data })
   } catch (err) {
     next(err)

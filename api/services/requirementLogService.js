@@ -5,8 +5,7 @@ export const getAll = async (filters = {}) => {
   if (filters.studentId) query.studentId = filters.studentId
   if (filters.requirementId) query.requirementId = filters.requirementId
   return await StudentRequirementLog.find(query)
-    .populate('studentId', 'firstName lastName')
-    .populate('requirementId', 'itemName requiredQty unit')
+  
 }
 
 export const create = async (data) => {

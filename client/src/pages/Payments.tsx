@@ -61,10 +61,7 @@ const [paginationdata, setpaginationdata] = useState<pagination>({
           <p className="text-gray-500 text-sm">Track all incoming revenue and fee collections.</p>
         </div>
         <div className="flex gap-3">
-           <button className="bg-white border border-gray-200 text-gray-600 px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all transition-colors">
-            <Download size={18} />
-            Export CSV
-          </button>
+         
           <button 
             onClick={() => setIsModalOpen(true)}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-200"

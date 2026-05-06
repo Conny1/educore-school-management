@@ -186,7 +186,7 @@ export const getStudentTermlyFinancials = async (studentId) => {
     {
       // 6. Calculate balance and clean up the response
       $project: {
-        _id: 0,
+        _id: 1,
         term: 1,
         year: 1,
         amount: "$totalAmount",
@@ -201,4 +201,84 @@ export const getStudentTermlyFinancials = async (studentId) => {
   ]);
 
   return financials;
+};
+
+
+export const getStudentRequirementStatus = async (studentId) => {
+  const status = await Student.aggregate([
+    {
+      // 1. Target the specific student
+      $match: {
+        _id: new mongoose.Types.ObjectId(studentId),
+        is_deleted: false
+      }
+    },
+    {
+      // 2. Lookup all requirements set for this student's grade
+      $lookup: {
+        from: 'graderequirements',
+        localField: 'gradeId',
+        foreignField: 'gradeId',
+        pipeline: [{ $match: { is_deleted: false, isActive: true } }],
+        as: 'gradeRequirements'
+      }
+    },
+    {
+      // 3. Lookup all logs of items this specific student has brought
+      $lookup: {
+        from: 'studentrequirementlogs',
+        localField: '_id',
+        foreignField: 'studentId',
+        pipeline: [{ $match: { is_deleted: false } }],
+        as: 'deliveryLogs'
+      }
+    },
+    {
+      // 4. Deconstruct the requirements array to process each item
+      $unwind: "$gradeRequirements"
+    },
+    {
+      // 5. Calculate the total quantity brought for each specific requirement
+      $project: {
+        _id: 0,
+        requirementId: "$gradeRequirements._id",
+        itemName: "$gradeRequirements.itemName",
+        requiredQty: "$gradeRequirements.requiredQty",
+        unit: "$gradeRequirements.unit",
+        term: "$gradeRequirements.term",
+        year: "$gradeRequirements.year",
+        // Sum qtyBrought only where the log's requirementId matches current gradeRequirement._id
+        broughtQty: {
+          $sum: {
+            $map: {
+              input: {
+                $filter: {
+                  input: "$deliveryLogs",
+                  as: "log",
+                  cond: { $eq: ["$$log.requirementId", "$gradeRequirements._id"] }
+                }
+              },
+              as: "item",
+              in: "$$item.qtyBrought"
+            }
+          }
+        }
+      }
+    },
+    {
+      // 6. Add status flags for UI convenience
+      $addFields: {
+        isComplete: { $gte: ["$broughtQty", "$requiredQty"] },
+        pendingQty: { 
+          $max: [0, { $subtract: ["$requiredQty", "$broughtQty"] }] 
+        }
+      }
+    },
+    {
+      // 7. Sort by term and name
+      $sort: { year: -1, term: 1, itemName: 1 }
+    }
+  ]);
+
+  return status;
 };

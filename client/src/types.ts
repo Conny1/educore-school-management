@@ -22,12 +22,12 @@ export interface Student {
   enrolledAt: string;
 }
 export interface studentFinancial {
-  term:string;
-  year:string,
-  amount:number,
-  paid:number,
-  balance:number
-  _id:string
+  term: string;
+  year: string;
+  amount: number;
+  paid: number;
+  balance: number;
+  _id: string;
 }
 export interface Grade {
   _id: string;
@@ -59,7 +59,26 @@ export interface GradeRequirement {
   year: string;
   isActive: boolean;
 }
+export interface reqStatus {
+  requirementId: string;
+  itemName: string;
+  requiredQty: number;
+  unit: string;
+  term: string;
+  year: string;
+  broughtQty: number;
+  isComplete: Boolean;
+  pendingQty: number;
+}
 
+export interface requirementLogs {
+      studentId: string,
+    requirementId: string,
+    qtyBrought: number,
+    dateRecorded: string
+    remarks?: string
+    recordedBy: string
+}
 export interface Employee {
   _id: string;
   departmentId: string;
@@ -224,7 +243,7 @@ export type pagination = {
   totalResults: number;
 };
 
-export type dashbardstats  ={
-  studentCount:number;
-  staffCount:number
-}
+export type dashbardstats = {
+  studentCount: number;
+  staffCount: number;
+};

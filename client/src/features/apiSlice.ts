@@ -23,6 +23,8 @@ import {
   InventoryAlerts,
   dashbardstats,
   studentFinancial,
+  reqStatus,
+  requirementLogs,
 } from "../types";
 
 export const apiSlice = createApi({
@@ -33,6 +35,7 @@ export const apiSlice = createApi({
     "Student",
     "Grade",
     "Grade-Requirements",
+    "Student-Requirements-Logs",
     "Grade-Fee",
     "Employee",
     "Department",
@@ -76,13 +79,17 @@ export const apiSlice = createApi({
       query: () => "/students",
       providesTags: ["Student"],
     }),
-        getStudentById: build.query<ApiResponse<Student>, string>({
+    getStudentById: build.query<ApiResponse<Student>, string>({
       query: (id) => `/students/${id}`,
       providesTags: ["Student"],
     }),
-       getStudentFinancial: build.query<ApiResponse<studentFinancial[]>, string>({
+    getStudentFinancial: build.query<ApiResponse<studentFinancial[]>, string>({
       query: (id) => `/students/financial/${id}`,
       providesTags: ["Payment"],
+    }),
+    getStudentReqStatus: build.query<ApiResponse<reqStatus[]>, string>({
+      query: (id) => `/students/requirements/${id}`,
+      providesTags: ["Student-Requirements-Logs"],
     }),
     createStudent: build.mutation<ApiResponse<Student>, Partial<Student>>({
       query: (body) => ({
@@ -216,6 +223,18 @@ export const apiSlice = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Grade-Requirements"],
+    }),
+    // REQUIREMENT-LOGS
+    createRequirementLogs: build.mutation<
+      ApiResponse<requirementLogs>,
+      Partial<requirementLogs>
+    >({
+      query: (body) => ({
+        url: "/requirement-logs",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Student-Requirements-Logs"],
     }),
     // Employees
     getEmployees: build.query<ApiResponse<Employee[]>, void>({
@@ -372,7 +391,7 @@ export const apiSlice = createApi({
       query: () => "/inventory",
       providesTags: ["Inventory"],
     }),
-      getInventoryAlerts: build.query<ApiResponse<InventoryAlerts[]>, void>({
+    getInventoryAlerts: build.query<ApiResponse<InventoryAlerts[]>, void>({
       query: () => "/inventory/alerts",
       providesTags: ["Inventory"],
     }),
@@ -512,7 +531,7 @@ export const apiSlice = createApi({
     getReportSummary: build.query<any, void>({
       query: () => "/reports/summary",
     }),
-     getDashboardSummary: build.query<ApiResponse<dashbardstats>, void>({
+    getDashboardSummary: build.query<ApiResponse<dashbardstats>, void>({
       query: () => "/reports/dashboard",
     }),
   }),
@@ -530,6 +549,7 @@ export const {
   useFindAndfilterStudentsQuery,
   useGetStudentByIdQuery,
   useGetStudentFinancialQuery,
+  useGetStudentReqStatusQuery,
   // grades
   useGetGradesQuery,
   useCreateGradeMutation,
@@ -546,6 +566,8 @@ export const {
   useCreateGradeRequirementsMutation,
   useUpdateGradeRequirementsMutation,
   useDeleteGradeRequirementsMutation,
+  // requirement-Logs
+  useCreateRequirementLogsMutation,
   // employees
   useGetEmployeesQuery,
   useCreateEmployeeMutation,

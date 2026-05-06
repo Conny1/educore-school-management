@@ -7,7 +7,8 @@ const StudentRequirementLogSchema = new mongoose.Schema({
   qtyBrought: { type: Number, required: true },
   dateRecorded: { type: String, required: true },
   remarks: { type: String, default: '' },
-  recordedBy: { type: String, required: true }
+  recordedBy: { type: String, required: true },
+  is_deleted:{type:Boolean, default:false}
 }, { timestamps: true })
 
 const StudentRequirementLog = mongoose.model('StudentRequirementLog', StudentRequirementLogSchema)

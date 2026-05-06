@@ -157,12 +157,12 @@ const GradeRequirementsManager: React.FC<Props> = ({ gradeId }) => {
                 </td>
                 <td className="px-4 py-3 text-right flex justify-end gap-2">
                   {/* EDIT */}
-                  <button
+                  {/* <button
                     onClick={() => handleEdit(req)}
                     className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"
                   >
                     <Edit2 size={14} />
-                  </button>
+                  </button> */}
 
                   {/* DELETE */}
                   <button

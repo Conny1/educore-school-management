@@ -4,7 +4,8 @@ export const getAll = async (filters = {}) => {
   const query = { schoolId: filters.schoolId, is_deleted:false }
   if (filters.gradeId) query.gradeId = filters.gradeId
   if (filters.isActive !== undefined) query.isActive = filters.isActive
-  return await GradeRequirement.find(query).populate('gradeId', 'name stream')
+  // console.log(query)
+  return await GradeRequirement.find(query)
 }
 
 export const create = async (data) => {
