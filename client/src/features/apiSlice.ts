@@ -25,6 +25,7 @@ import {
   studentFinancial,
   reqStatus,
   requirementLogs,
+  School,
 } from "../types";
 
 export const apiSlice = createApi({
@@ -45,6 +46,7 @@ export const apiSlice = createApi({
     "Inventory",
     "Supplier",
     "Project",
+    "School",
     "Timetable",
   ],
   endpoints: (build) => ({
@@ -281,6 +283,32 @@ export const apiSlice = createApi({
       query: () => "/departments",
       providesTags: ["Department"],
     }),
+      createDepartments: build.mutation<ApiResponse<Department>, Partial<Department>>({
+      query: (body) => ({
+        url: "/departments",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Department"],
+    }),
+
+    updateDepartment: build.mutation<ApiResponse<Department>, Partial<Department>>({
+      query: (body) => ({
+        url: `/departments/${body._id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Department"],
+    }),
+  deleteDepartment: build.mutation<ApiResponse<Department>, string>({
+      query: (id) => ({
+        url: `/departments/${id}`,
+        method: "DELETE",
+    
+      }),
+      invalidatesTags: ["Department"],
+    }),
+
 
     // Payments
     getPayments: build.query<ApiResponse<Payment[]>, void>({
@@ -534,6 +562,21 @@ export const apiSlice = createApi({
     getDashboardSummary: build.query<ApiResponse<dashbardstats>, void>({
       query: () => "/reports/dashboard",
     }),
+
+    // school
+        getSchoolByID: build.query<ApiResponse<School>, string>({
+      query: (id) => `/school/${id}`,
+      providesTags: ["School"],
+    }),
+  
+    updateSchool: build.mutation<ApiResponse<School>, Partial<School>>({
+      query: (body) => ({
+        url: `/school/${body._id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["School"],
+    }),
   }),
 });
 
@@ -576,6 +619,9 @@ export const {
   useEmployeesStatsQuery,
   // departments
   useGetDepartmentsQuery,
+  useDeleteDepartmentMutation,
+  useUpdateDepartmentMutation,
+  useCreateDepartmentsMutation,
   // payments
   useGetPaymentsQuery,
   useCreatePaymentMutation,
@@ -613,4 +659,7 @@ export const {
   // reports
   useGetReportSummaryQuery,
   useGetDashboardSummaryQuery,
+  // school
+  useGetSchoolByIDQuery,
+  useUpdateSchoolMutation,
 } = apiSlice;

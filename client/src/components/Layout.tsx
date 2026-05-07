@@ -21,19 +21,18 @@ import {
   User as UserIcon,
   Menu as MenuIcon,
   X,
+  Settings,
 } from "lucide-react";
 import { school } from "../mock/data";
 import { cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Navigate,
-  NavLink,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import { useGetauthuserQuery } from "../features/apiSlice";
+import {
+  useGetauthuserQuery,
+  useGetSchoolByIDQuery,
+} from "../features/apiSlice";
 import { clearUserData, updateUserData } from "../features/user/userSlice";
 import { clearToken } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
@@ -55,6 +54,8 @@ const navItems = [
   { id: "suppliers", label: "Suppliers", icon: Truck },
   { id: "projects", label: "Projects", icon: KanbanSquare },
   // { id: "reports", label: "Reports", icon: FileText },
+    { id: "settings", label: "Settings", icon: Settings },
+
 ];
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -66,16 +67,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const pathName = useLocation().pathname.split("/")[1];
   const [activeTab, setactiveTab] = useState(pathName);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-
-    const { data: authUser } = useGetauthuserQuery();
-    useMemo(() => {
-      if (authUser?.data) {
-        dispatch(updateUserData(authUser?.data));
-      }
-      return authUser?.data;
-    }, [authUser?.data]);
-
+  const navigate = useNavigate();
+  const { data: schoolData } = useGetSchoolByIDQuery(user?.schoolId as string, {
+    skip: user?.schoolId === undefined,
+  });
+  const school = useMemo(() => schoolData?.data, [schoolData?.data]);
+  const { data: authUser } = useGetauthuserQuery();
+  useMemo(() => {
+    if (authUser?.data) {
+      dispatch(updateUserData(authUser?.data));
+    }
+    return authUser?.data;
+  }, [authUser?.data]);
 
   useEffect(() => {
     setactiveTab(pathName);
@@ -132,7 +135,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           {!collapsed && (
             <div className="p-3 bg-white/5 rounded-xl flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-xs">
-                JK
+                {user?.name[0]}
+                {user?.name[1]}
               </div>
               <div className="flex-1 overflow-hidden">
                 <p className="text-xs font-bold truncate text-white">
@@ -144,32 +148,31 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
             </div>
           )}
-            <button
-            onClick={()=>{
-              dispatch( clearToken() )
-             dispatch( clearUserData() )
-             toast.info("Logged out");
-             setTimeout(()=>{
-              navigate("/login")
-             }, 2000)
-            }
-            }
-                className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[0.875rem] transition-all duration-200 group relative",
-                "text-sidebar-text hover:bg-white/5",
-                )}
-              >
-                <LogOut
-                  size={18}
-                  className="opacity-70 group-hover:opacity-100 transition-opacity"
-                />
-                {!collapsed && <span>Logout</span>}
-                {collapsed && (
-                  <div className="absolute left-16 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 font-normal">
-                    Logout
-                  </div>
-                )}
-              </button>
+          <button
+            onClick={() => {
+              dispatch(clearToken());
+              dispatch(clearUserData());
+              toast.info("Logged out");
+              setTimeout(() => {
+                navigate("/login");
+              }, 2000);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[0.875rem] transition-all duration-200 group relative",
+              "text-sidebar-text hover:bg-white/5",
+            )}
+          >
+            <LogOut
+              size={18}
+              className="opacity-70 group-hover:opacity-100 transition-opacity"
+            />
+            {!collapsed && <span>Logout</span>}
+            {collapsed && (
+              <div className="absolute left-16 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 font-normal">
+                Logout
+              </div>
+            )}
+          </button>
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="w-full flex items-center justify-center p-2 rounded-lg text-sidebar-text hover:bg-white/5 transition-colors"
@@ -232,19 +235,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </NavLink>
                 ))}
               </nav>
-                 <button
-            onClick={()=>{
-              dispatch( clearToken() )
-             dispatch( clearUserData() )
-             toast.info("Logged out");
-             setTimeout(()=>{
-              navigate("/login")
-             }, 2000)
-            }
-            }
+              <button
+                onClick={() => {
+                  dispatch(clearToken());
+                  dispatch(clearUserData());
+                  toast.info("Logged out");
+                  setTimeout(() => {
+                    navigate("/login");
+                  }, 2000);
+                }}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[0.875rem] transition-all duration-200 group relative",
-                "text-sidebar-text hover:bg-white/5",
+                  "text-sidebar-text hover:bg-white/5",
                 )}
               >
                 <LogOut
@@ -274,14 +276,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             >
               <MenuIcon size={24} />
             </button>
-            <div>
-              <h1 className="text-[1.1rem] font-bold text-text-main leading-tight">
-                {school.name}
-              </h1>
-              <p className="text-[0.75rem] text-text-muted uppercase tracking-wider font-medium">
-                {school.currentTerm} • {school.currentYear} Academic Year
-              </p>
-            </div>
+            {school && (
+              <div>
+                <h1 className="text-[1.1rem] font-bold text-text-main leading-tight">
+                  {school.name}
+                </h1>
+                <p className="text-[0.75rem] text-text-muted uppercase tracking-wider font-medium">
+                  {school.currentTerm} • {school.currentYear} Academic Year
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-4">
@@ -299,13 +303,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             <div className="flex items-center gap-4 pl-1">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold">Jane Kamau</p>
-                <p className="text-[0.75rem] text-text-muted">
-                  Head Administrator
-                </p>
+                <p className="text-sm font-semibold">{user?.name}</p>
+                <p className="text-[0.75rem] text-text-muted">{user?.role}</p>
               </div>
               <div className="w-[40px] h-[40px] border-radius-[50%] bg-gray-200 flex items-center justify-center font-semibold text-sm rounded-full">
-                JK
+                {user?.name[0]}
+                {user?.name[1]}
               </div>
             </div>
           </div>

@@ -1,6 +1,12 @@
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { Layout } from "./components/Layout";
-import {ToastContainer} from  "react-toastify"
+import { ToastContainer } from "react-toastify";
 
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
@@ -16,20 +22,21 @@ import Projects from "./pages/Projects";
 import Reports from "./pages/Reports";
 import Login from "./pages/Login";
 import StudentProfile from "./pages/StudentProfile";
+import SettingsPage from "./pages/Settings";
 
 export default function App() {
   return (
     <BrowserRouter>
-  <ToastContainer/>
+      <ToastContainer />
       <Routes>
-        <Route path="/login" element={<Login/>} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Layout>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
-                    <Route path="/students/:id" element={<StudentProfile/>} />
+          <Route path="/students/:id" element={<StudentProfile />} />
 
           <Route path="/grades" element={<Grades />} />
           <Route path="/employees" element={<Employees />} />
@@ -41,6 +48,7 @@ export default function App() {
           <Route path="/suppliers" element={<Suppliers />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/settings" element={<SettingsPage />} />
 
           {/* fallback */}
           <Route path="*" element={<Dashboard />} />

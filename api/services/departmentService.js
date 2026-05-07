@@ -1,7 +1,7 @@
 import Department from '../models/Department.js'
 
 export const getAll = async (filters = {}) => {
-  const query = { schoolId: filters.schoolId }
+  const query = { schoolId: filters.schoolId , is_deleted:false}
   return await Department.find(query)
 }
 
