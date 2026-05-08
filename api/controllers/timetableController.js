@@ -1,6 +1,8 @@
+import { createError } from '../configs/errorConfig.js'
 import * as timetableService from '../services/timetableService.js'
 
 export const getTimetable = async (req, res, next) => {
+  if(!req.query.gradeId ) return next(createError(400, "Grade ID is missing"))
   try {
     const data = await timetableService.getAll({ ...req.query, schoolId: req.user.schoolId })
     res.json({ success: true, data })

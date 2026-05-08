@@ -105,7 +105,7 @@ export interface employeeStats {
   total: number;
   active: number;
   teachers: number;
-  onLeave: number;
+  onLeave: number; 
 }
 
 export interface Department {
@@ -200,17 +200,17 @@ export interface Project {
   managedBy: string;
 }
 
-export interface TimetableEntry {
+export interface Timetable {
   _id: string;
-  gradeId: string | any;
-  day: string;
-  period: number;
+  gradeId: string;
+  employeeId: string;
+  employee?:{firstName:string, lastName:string,}
   subject: string;
-  teacherId?: string | any;
-  startTime?: string;
-  endTime?: string;
+  dayOfWeek: 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
+  startTime: string;
+  endTime: string;
+  room: string;
 }
-
 export interface LoginResponse {
   success: boolean;
   user: {

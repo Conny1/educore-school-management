@@ -10,7 +10,6 @@ import {
   InventoryItem,
   Supplier,
   Project,
-  TimetableEntry,
   User,
   LoginResponse,
   ApiResponse,
@@ -26,6 +25,7 @@ import {
   reqStatus,
   requirementLogs,
   School,
+  Timetable,
 } from "../types";
 
 export const apiSlice = createApi({
@@ -550,9 +550,25 @@ export const apiSlice = createApi({
       providesTags: ["Project"],
     }),
     // Timetable
-    getTimetable: build.query<TimetableEntry[], void>({
-      query: () => "/timetable",
+    getTimetable: build.query<ApiResponse<Timetable[]>, string>({
+      query: (id) => `/timetable/?gradeId=${id}`,
       providesTags: ["Timetable"],
+    }),
+        createTimetable: build.mutation<ApiResponse<Timetable>, Partial<Timetable>>({
+      query: (body) => ({
+        url: "/timetable",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Timetable"],
+    }),
+    updateTimetable: build.mutation<ApiResponse<Timetable>, Partial<Timetable>>({
+      query: (body) => ({
+        url: `/timetable/${body._id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Timetable"],
     }),
 
     // Reports
@@ -655,7 +671,9 @@ export const {
   useFindAndfilterProjectsQuery,
   useUpdateProjectMutation,
   // timetable
-  useGetTimetableQuery,
+  useLazyGetTimetableQuery,
+  useCreateTimetableMutation,
+  useUpdateTimetableMutation,
   // reports
   useGetReportSummaryQuery,
   useGetDashboardSummaryQuery,
