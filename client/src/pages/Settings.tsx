@@ -11,6 +11,7 @@ import {
 import { cn } from '../lib/utils'; // Assuming you have a utility for tailwind classes
 import SchoolSettings from '../components/settings/SchoolSettings';
 import DepartmentSettings from '../components/settings/DepartmentSettings';
+import UserSettings from '../components/user/UserSettings';
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('school');
@@ -80,10 +81,7 @@ const SettingsPage = () => {
 
               {activeTab === 'users' && (
                 <div className="space-y-6">
-                  {/* USER LIST & ADD BUTTON COMPONENT GOES HERE */}
-                  <div className="aspect-video w-full rounded-2xl border-2 border-dashed border-gray-100 flex items-center justify-center text-gray-400">
-                    User Management Interface Placeholder
-                  </div>
+                <UserSettings/>
                 </div>
               )}
 

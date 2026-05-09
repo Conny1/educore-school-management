@@ -1,12 +1,13 @@
 import express from 'express'
 const router = express.Router()
 import * as employeeController from '../controllers/employeeController.js'
-import { verifyTokens } from '../middleware/authMiddleware.js'
+import { checkAccess, verifyTokens } from '../middleware/authMiddleware.js'
 import { validate } from '../middleware/validate.js'
 import { createEmployeeSchema, updateEmployeeSchema } from '../validation/employeeValidation.js'
 import { findandfilter } from '../validation/logisticsValidation.js'
 
 router.use(verifyTokens)
+router.use(checkAccess )
 
 router.get('/', employeeController.getEmployees)
 router.get('/stats', employeeController.employeeStats)

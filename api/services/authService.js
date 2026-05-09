@@ -4,12 +4,11 @@ import User from '../models/User.js'
 import { createError } from '../configs/errorConfig.js'
 
 export const login = async ({ email, password }) => {
-  const user = await User.findOne({ email })
+  const user = await User.findOne({ email, is_deleted:false })
   if (!user) throw createError(401, 'Invalid credentials')
 
   const valid = await bcrypt.compare(password, user.password)
   if (!valid) throw createError(401, 'Invalid credentials')
-console.log(process.env.ACCESS_TOKEN_KEY)
   // schoolId is embedded in the token payload
   const accessToken = jwt.sign(
     { _id: user._id, schoolId: user.schoolId, role: user.role },

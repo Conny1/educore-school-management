@@ -70,10 +70,48 @@ export const apiSlice = createApi({
       query: () => "/auth/me",
       providesTags: ["User"],
     }),
+// USER
+    getUsers: build.query<ApiResponse<User[]>, void>({
+      query: () => "/users",
+      providesTags: ["User"],
+    }),
+    createUser: build.mutation<ApiResponse<User>, Partial<User>>({
+      query: (body) => ({
+        url: "/users",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    updateUser: build.mutation<ApiResponse<User>, Partial<User>>({
+      query: (body) => ({
+        url: `/users/${body._id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
 
-    dashbardstats: build.query<any, void>({
-      query: () => "/dashboard/stats",
-      providesTags: ["User", "Student", "Employee", "Payment", "Expense"],
+    findAndfilterUser: build.query<
+      {
+        success: boolean;
+        data: { results: User[] } & pagination;
+      },
+      findandfilter
+    >({
+      query: (body) => ({
+        url: `/users/findandfilter`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["User"],
+    }),
+    deleteUser: build.mutation<ApiResponse<User>, string>({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
     }),
 
     // Students
@@ -600,7 +638,11 @@ export const {
   useLoginMutation,
   useCreateAccountMutation,
   useGetauthuserQuery,
-  useDashbardstatsQuery,
+// Users
+useGetUsersQuery,
+useCreateUserMutation,
+useUpdateUserMutation,
+useDeleteUserMutation,
   // student
   useGetStudentsQuery,
   useCreateStudentMutation,

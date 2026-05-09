@@ -1,11 +1,13 @@
 import express from 'express'
 const router = express.Router()
 import * as inventoryController from '../controllers/inventoryController.js'
-import { verifyTokens } from '../middleware/authMiddleware.js'
+import { checkAccess, verifyTokens } from '../middleware/authMiddleware.js'
 import { validate } from '../middleware/validate.js'
 import { createInventorySchema, findandfilter } from '../validation/logisticsValidation.js'
 
 router.use(verifyTokens)
+router.use(checkAccess )
+
 router.get('/', inventoryController.getInventory)
 router.post('/', validate(createInventorySchema), inventoryController.createInventoryItem)
 router.put('/:id', inventoryController.updateInventoryItem)

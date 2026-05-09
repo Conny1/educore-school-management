@@ -1,4 +1,4 @@
-export type role = "superadmin" | "admin" | "teacher" | "finance";
+export type role = "superadmin" | "admin" | "teacher" | "finance" | "management";
 export interface School {
   _id: string;
   name: string;
@@ -9,8 +9,10 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  password:string
   role: role;
   schoolId: string;
+  employeeId:string
 }
 
 export interface Student {

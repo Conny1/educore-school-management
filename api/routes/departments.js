@@ -1,11 +1,12 @@
 import express from 'express'
 const router = express.Router()
 import * as departmentController from '../controllers/departmentController.js'
-import { verifyTokens } from '../middleware/authMiddleware.js'
+import { checkAccess, verifyTokens } from '../middleware/authMiddleware.js'
 import { validate } from '../middleware/validate.js'
 import { createDepartmentSchema, updateDepartmentSchema } from '../validation/departmentValidation.js'
 
 router.use(verifyTokens)
+router.use(checkAccess )
 
 router.get('/', departmentController.getDepartments)
 router.post('/', validate(createDepartmentSchema), departmentController.createDepartment)

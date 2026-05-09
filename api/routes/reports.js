@@ -1,9 +1,10 @@
 import express from 'express'
 const router = express.Router()
 import * as reportController from '../controllers/reportController.js'
-import { verifyTokens } from '../middleware/authMiddleware.js'
+import { checkAccess, verifyTokens } from '../middleware/authMiddleware.js'
 
 router.use(verifyTokens)
+router.use(checkAccess )
 
 router.get('/fees', reportController.getFeeCollectionReport)
 router.get('/attendance', reportController.getAttendanceReport)

@@ -1,11 +1,13 @@
 import express from 'express'
 const router = express.Router()
 import * as gradeRequirementController from '../controllers/gradeRequirementController.js'
-import { verifyTokens } from '../middleware/authMiddleware.js'
+import { checkAccess, verifyTokens } from '../middleware/authMiddleware.js'
 import { validate } from '../middleware/validate.js'
 import { createGradeRequirementSchema, updateGradeRequirementSchema } from '../validation/gradeRequirementValidation.js'
 
 router.use(verifyTokens)
+router.use(checkAccess )
+
 
 router.get('/', gradeRequirementController.getGradeRequirements)
 router.post('/', validate(createGradeRequirementSchema), gradeRequirementController.createGradeRequirement)

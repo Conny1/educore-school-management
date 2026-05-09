@@ -30,6 +30,7 @@ import inventoryRoutes from "./routes/inventory.js";
 import projectRoutes from "./routes/projects.js";
 import reportRoutes from "./routes/reports.js";
 import schoolRoutes from "./routes/school.js";
+import userRoutes from "./routes/user.js";
 
 async function startServer() {
   const app = express();
@@ -67,6 +68,7 @@ async function startServer() {
   app.use("/api/projects", projectRoutes);
   app.use("/api/reports", reportRoutes);
   app.use("/api/school", schoolRoutes);
+   app.use("/api/users", userRoutes);
 
   // Health check
   app.get("/api/health", (req, res) => {

@@ -24,7 +24,7 @@ import {
   Settings,
 } from "lucide-react";
 import { school } from "../mock/data";
-import { cn } from "../lib/utils";
+import { accessRules, cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,7 +83,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     setactiveTab(pathName);
   }, [pathName]);
+// Filter nav items based on user role
+const userRole = user?.role?.toLowerCase() || "";
+  const allowedNavItems = useMemo(() => {
+    
+    const rules = accessRules[userRole]?.access_routes || [];
+    
+    // If superadmin or rule contains wildcard, show everything
+    if (rules.includes("*")) return navItems;
 
+    // Filter items where the ID exists in the access_routes array
+    return navItems.filter((item) => rules.includes(item.id));
+  }, [userRole]);
   if (!auth) {
     return <Navigate to="/login" replace />;
   }
@@ -102,7 +113,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-1">
-          {navItems.map((item) => (
+          {allowedNavItems.map((item) => (
             <NavLink to={item.id} key={item.id}>
               <button
                 className={cn(
@@ -216,7 +227,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </button>
               </div>
               <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-1">
-                {navItems.map((item) => (
+                {allowedNavItems.map((item) => (
                   <NavLink to={item.id} key={item.id}>
                     <button
                       onClick={() => {
