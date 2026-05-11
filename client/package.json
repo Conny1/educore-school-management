@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --config client/vite.config.ts",
-    "preview": "vite preview --config client/vite.config.ts",
+    "build": "vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit -p client/tsconfig.json"
+    "lint": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
