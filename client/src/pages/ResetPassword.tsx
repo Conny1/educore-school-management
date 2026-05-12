@@ -87,7 +87,7 @@ const ResetPassword = () => {
               {isLoading ? (
                 <Loader2 className="animate-spin" size={20} />
               ) : (
-                "Sign In"
+                "Confirm"
               )}
             </button>
           </form>
