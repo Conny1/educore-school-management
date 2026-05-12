@@ -66,11 +66,24 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    resetPassword: build.mutation<
+      ApiResponse<{ success: true }>,
+      { token: string; password: string }
+    >({
+      query: ({ token, ...body }) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
     getauthuser: build.query<ApiResponse<User>, void>({
       query: () => "/auth/me",
       providesTags: ["User"],
     }),
-// USER
+    // USER
     getUsers: build.query<ApiResponse<User[]>, void>({
       query: () => "/users",
       providesTags: ["User"],
@@ -321,7 +334,10 @@ export const apiSlice = createApi({
       query: () => "/departments",
       providesTags: ["Department"],
     }),
-      createDepartments: build.mutation<ApiResponse<Department>, Partial<Department>>({
+    createDepartments: build.mutation<
+      ApiResponse<Department>,
+      Partial<Department>
+    >({
       query: (body) => ({
         url: "/departments",
         method: "POST",
@@ -330,7 +346,10 @@ export const apiSlice = createApi({
       invalidatesTags: ["Department"],
     }),
 
-    updateDepartment: build.mutation<ApiResponse<Department>, Partial<Department>>({
+    updateDepartment: build.mutation<
+      ApiResponse<Department>,
+      Partial<Department>
+    >({
       query: (body) => ({
         url: `/departments/${body._id}`,
         method: "PUT",
@@ -338,15 +357,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Department"],
     }),
-  deleteDepartment: build.mutation<ApiResponse<Department>, string>({
+    deleteDepartment: build.mutation<ApiResponse<Department>, string>({
       query: (id) => ({
         url: `/departments/${id}`,
         method: "DELETE",
-    
       }),
       invalidatesTags: ["Department"],
     }),
-
 
     // Payments
     getPayments: build.query<ApiResponse<Payment[]>, void>({
@@ -592,22 +609,26 @@ export const apiSlice = createApi({
       query: (id) => `/timetable/?gradeId=${id}`,
       providesTags: ["Timetable"],
     }),
-        createTimetable: build.mutation<ApiResponse<Timetable>, Partial<Timetable>>({
-      query: (body) => ({
-        url: "/timetable",
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["Timetable"],
-    }),
-    updateTimetable: build.mutation<ApiResponse<Timetable>, Partial<Timetable>>({
-      query: (body) => ({
-        url: `/timetable/${body._id}`,
-        method: "PUT",
-        body,
-      }),
-      invalidatesTags: ["Timetable"],
-    }),
+    createTimetable: build.mutation<ApiResponse<Timetable>, Partial<Timetable>>(
+      {
+        query: (body) => ({
+          url: "/timetable",
+          method: "POST",
+          body,
+        }),
+        invalidatesTags: ["Timetable"],
+      },
+    ),
+    updateTimetable: build.mutation<ApiResponse<Timetable>, Partial<Timetable>>(
+      {
+        query: (body) => ({
+          url: `/timetable/${body._id}`,
+          method: "PUT",
+          body,
+        }),
+        invalidatesTags: ["Timetable"],
+      },
+    ),
 
     // Reports
     getReportSummary: build.query<any, void>({
@@ -618,11 +639,11 @@ export const apiSlice = createApi({
     }),
 
     // school
-        getSchoolByID: build.query<ApiResponse<School>, string>({
+    getSchoolByID: build.query<ApiResponse<School>, string>({
       query: (id) => `/school/${id}`,
       providesTags: ["School"],
     }),
-  
+
     updateSchool: build.mutation<ApiResponse<School>, Partial<School>>({
       query: (body) => ({
         url: `/school/${body._id}`,
@@ -631,6 +652,17 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["School"],
     }),
+    // notifications
+    resetPasswordLink: build.mutation<
+      ApiResponse<{ success: boolean }>,
+      { email: string }
+    >({
+      query: (body) => ({
+        url: `/notifications/reset-password-link-email`,
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -638,11 +670,12 @@ export const {
   useLoginMutation,
   useCreateAccountMutation,
   useGetauthuserQuery,
-// Users
-useGetUsersQuery,
-useCreateUserMutation,
-useUpdateUserMutation,
-useDeleteUserMutation,
+  useResetPasswordMutation,
+  // Users
+  useGetUsersQuery,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
   // student
   useGetStudentsQuery,
   useCreateStudentMutation,
@@ -722,4 +755,6 @@ useDeleteUserMutation,
   // school
   useGetSchoolByIDQuery,
   useUpdateSchoolMutation,
+  // notifications
+  useResetPasswordLinkMutation,
 } = apiSlice;

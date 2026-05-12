@@ -38,3 +38,17 @@ export const login = async ({ email, password }) => {
 export const getMe = async (userId) => {
   return await User.findById(userId).select('-password')
 }
+
+export const resetPassword = async (id, body) => {
+  let password = body.password;
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(password, salt);
+  let newPassword = hash;
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    { $set: { password: newPassword } },
+    { new: true },
+  );
+  return user;
+};

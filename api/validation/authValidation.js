@@ -6,3 +6,9 @@ export const loginSchema = {
     password: Joi.string().required()
   })
 }
+
+export const resetPassword = {
+  body: Joi.object({
+    password: Joi.string().required()
+  })
+}

@@ -26,7 +26,7 @@ import {
 import { school } from "../mock/data";
 import { accessRules, cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
-import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import {
@@ -37,9 +37,6 @@ import { clearUserData, updateUserData } from "../features/user/userSlice";
 import { clearToken } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: BarChart3 },
@@ -58,7 +55,7 @@ const navItems = [
 
 ];
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout = () => {
   const auth = useSelector((state: RootState) => state.auth.value.accessToken);
   const user = useSelector((state: RootState) => state.user.value);
 
@@ -96,7 +93,8 @@ const userRole = user?.role?.toLowerCase() || "";
     return navItems.filter((item) => rules.includes(item.id));
   }, [userRole]);
   if (!auth) {
-    return <Navigate to="/login" replace />;
+    console.log("meme")
+    return <Navigate to="/login" replace  />;
   }
 
   return (
@@ -334,7 +332,8 @@ const userRole = user?.role?.toLowerCase() || "";
             transition={{ duration: 0.1 }}
             className="w-full"
           >
-            {children}
+                    <Outlet />
+
           </motion.div>
         </main>
       </div>

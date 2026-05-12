@@ -3,7 +3,7 @@ import path from "path";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import morgan from "morgan"
+import morgan from "morgan";
 
 // Load environment variables
 dotenv.config();
@@ -31,13 +31,15 @@ import projectRoutes from "./routes/projects.js";
 import reportRoutes from "./routes/reports.js";
 import schoolRoutes from "./routes/school.js";
 import userRoutes from "./routes/user.js";
+import notificationRoutes from "./routes/notification.js";
 
 async function startServer() {
   const app = express();
   const PORT = 8000;
 
   // DB Connection
-  const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/school_mgmt";
+  const mongoUri =
+    process.env.MONGO_URI || "mongodb://localhost:27017/school_mgmt";
   try {
     await mongoose.connect(mongoUri);
     console.log("Connected to MongoDB");
@@ -47,11 +49,11 @@ async function startServer() {
 
   app.use(cors());
   app.use(express.json());
-  app.use(morgan("dev"))
+  app.use(morgan("dev"));
 
   // API routes FIRST
   app.use("/api/auth", authRoutes);
-  app.use("/api/departments", departmentRoutes); 
+  app.use("/api/departments", departmentRoutes);
   app.use("/api/grades", gradeRoutes);
   app.use("/api/grade-fees", gradeFeeRoutes);
   app.use("/api/grade-requirements", gradeRequirementRoutes);
@@ -68,7 +70,8 @@ async function startServer() {
   app.use("/api/projects", projectRoutes);
   app.use("/api/reports", reportRoutes);
   app.use("/api/school", schoolRoutes);
-   app.use("/api/users", userRoutes);
+  app.use("/api/users", userRoutes);
+  app.use("/api/notifications", notificationRoutes);
 
   // Health check
   app.get("/api/health", (req, res) => {

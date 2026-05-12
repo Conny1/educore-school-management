@@ -23,6 +23,8 @@ import Reports from "./pages/Reports";
 import Login from "./pages/Login";
 import StudentProfile from "./pages/StudentProfile";
 import SettingsPage from "./pages/Settings";
+import ResetPasswordLink from "./pages/ResetPasswordLink";
+import ResetPassword from "./pages/ResetPassword";
 
 export default function App() {
   return (
@@ -30,14 +32,14 @@ export default function App() {
       <ToastContainer />
       <Routes>
         <Route path="/login" element={<Login />} />
-      </Routes>
-      <Layout>
-        <Routes>
+        <Route path="/reset-password-link" element={<ResetPasswordLink />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+        <Route element={<Layout />}>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
           <Route path="/students/:id" element={<StudentProfile />} />
-
           <Route path="/grades" element={<Grades />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/timetable" element={<Timetable />} />
@@ -52,8 +54,8 @@ export default function App() {
 
           {/* fallback */}
           <Route path="*" element={<Dashboard />} />
-        </Routes>
-      </Layout>
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

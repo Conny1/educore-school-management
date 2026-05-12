@@ -1,3 +1,4 @@
+import { createError } from '../configs/errorConfig.js'
 import * as authService from '../services/authService.js'
 
 export const login = async (req, res, next) => {
@@ -25,3 +26,15 @@ export const logout = async (req, res, next) => {
     next(err)
   }
 }
+
+export const resetPassword = async (req, resp, next) => {
+  try {
+    const user = await authService.resetPassword(req.user._id, req.body);
+
+    resp.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    return next(createError(error.status || 500, error.message));
+  }
+};

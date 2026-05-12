@@ -1,48 +1,38 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { LogIn, Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
+import { Lock, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { useLoginMutation } from "../features/apiSlice";
-import { updateTokenData } from "../features/auth/authSlice";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RootState } from "../app/store";
+import { useResetPasswordMutation } from "../features/apiSlice";
 
-const Login = () => {
+const ResetPassword = () => {
   const auth = useSelector((state: RootState) => state.auth.value.accessToken);
+  const { token } = useParams(); // e.g., /reset-password/:token
 
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
-  const [login, { isLoading }] = useLoginMutation();
-  const dispatch = useDispatch();
+  const [login, { isLoading }] = useResetPasswordMutation();
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
 
     try {
-      const response = await login({ email, password }).unwrap();
-      if (response.success && response.user) {
-        dispatch(
-          updateTokenData({
-            accessToken: response.accessToken,
-            refreshToken: response.refreshToken,
-            _id: response.user._id,
-          }),
-          
-        );
-        toast.success("Success...");
-
+      const response = await login({
+        password,
+        token: token as string,
+      }).unwrap();
+      if (response.success) {
+        toast.success("Your password has been changed");
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/login");
         }, 2000);
       }
     } catch (err: any) {
-      setErrorMsg(
-        err?.data?.message || "Login failed. Please check your credentials.",
-      );
+      setErrorMsg(err?.data?.message || " failed. Try again.");
     }
   };
   if (auth) {
@@ -55,14 +45,6 @@ const Login = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md w-full"
       >
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 text-white">
-            <LogIn size={32} />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">Mshiriki Academy</h1>
-          <p className="text-gray-500 mt-2">Sign in to manage your school</p>
-        </div>
-
         <div className="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             <AnimatePresence mode="wait">
@@ -78,26 +60,6 @@ const Login = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Mail size={18} />
-                </div>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
-                  placeholder="name@school.com"
-                />
-              </div>
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -131,17 +93,17 @@ const Login = () => {
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-500">
-            For access issues, please contact your school administrator.
+            <Link
+              to="/login"
+              className=" text-xs font-bold text-blue-500 underline"
+            >
+              Back to login
+            </Link>{" "}
           </p>
-           <p className="mt-8 text-center text-sm text-gray-500">
-   <Link to="/reset-password-link" className=" text-xs font-bold text-blue-500 underline">
-              Forgot Password
-          </Link>          </p>
-         
         </div>
       </motion.div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;
