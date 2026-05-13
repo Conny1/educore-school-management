@@ -4,9 +4,7 @@ import {
   students, 
   payments, 
   gradeFees, 
-  studentAttendance, 
-  employeeAttendance,
-  employees,
+
   expenses,
   gradeRequirements,
   studentRequirementLogs
@@ -21,7 +19,6 @@ import {
   Wallet, 
   Receipt, 
   Package, 
-  Filter,
   Download
 } from 'lucide-react';
 

@@ -31,7 +31,7 @@ const Projects: React.FC = () => {
     search: "",
     match_values: {},
   });
-  const { data, refetch , isLoading:projectsLoading } = useFindAndfilterProjectsQuery(filters);
+  const { data } = useFindAndfilterProjectsQuery(filters);
   const projects = useMemo(() => {
     if(data?.success){
       setpaginationdata({    page: data.data.page,
@@ -50,7 +50,7 @@ const Projects: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleAdd = (status: Project['status']) => {
+  const handleAdd = () => {
     setEditingProject(null);
     setIsModalOpen(true);
   };
@@ -65,7 +65,7 @@ const Projects: React.FC = () => {
           <p className="text-gray-500 text-sm">Monitor school development projects and construction budgets.</p>
         </div>
         <button 
-          onClick={() => handleAdd('planning')}
+          onClick={ handleAdd}
           className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-200"
         >
           <Plus size={20} />
@@ -85,7 +85,7 @@ const Projects: React.FC = () => {
                  </span>
               </div>
               <button 
-                onClick={() => handleAdd(status as Project['status'])}
+                onClick={handleAdd}
                 className="p-1 text-gray-400 hover:text-indigo-600 rounded transition-colors"
               >
                 <Plus size={16} />

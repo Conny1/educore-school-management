@@ -3,7 +3,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
 } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { ToastContainer } from "react-toastify";

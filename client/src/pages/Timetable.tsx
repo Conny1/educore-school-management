@@ -1,8 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { timetables as mockTimetables } from "../mock/data";
-import { Plus, Edit2, Clock, MapPin, User, Book } from "lucide-react";
-
-import { cn } from "../lib/utils";
+import { Plus, Edit2, Clock, MapPin } from "lucide-react";
 import TimetableForm from "../components/timetable/TimetableForm";
 import { Timetable } from "@/types";
 import {

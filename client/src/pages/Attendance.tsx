@@ -10,7 +10,6 @@ import { StudentAttendance, EmployeeAttendance } from '../mock/types';
 import { Badge } from '../components/Badge';
 import { cn } from '../lib/utils';
 import { Calendar, Users, Briefcase, CheckCircle, XCircle, Clock, AlertCircle, Save, Search } from 'lucide-react';
-import { motion } from 'motion/react';
 
 const Attendance: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'students' | 'employees'>('students');

@@ -108,6 +108,7 @@ const EmployeeFormModal = ({
       const emp = await updateEmployee({ ...payload, _id: data._id });
       if (emp.data?.success) {
         toast.success("employee updated");
+        setEditingEmployee(null)
       } else {
         toast.error("Failed. Try again");
       }

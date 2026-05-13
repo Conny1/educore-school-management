@@ -1,29 +1,23 @@
-import React, { useEffect, useMemo, useState } from "react";
+import  { useEffect, useMemo, useState } from "react";
 import {
   BarChart3,
   Users,
   BookOpen,
   Briefcase,
   Calendar,
-  Clock,
   Wallet,
   Receipt,
   Package,
   Truck,
   KanbanSquare,
-  FileText,
-  School as SchoolIcon,
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Bell,
   Search,
-  User as UserIcon,
   Menu as MenuIcon,
   X,
   Settings,
 } from "lucide-react";
-import { school } from "../mock/data";
 import { accessRules, cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 import { Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";

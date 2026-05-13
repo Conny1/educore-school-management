@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Badge } from "../components/Badge";
-import { Plus, Receipt, Trash2, Edit2 } from "lucide-react";
+import { Plus, Trash2, Edit2 } from "lucide-react";
 
 import { cn, formatCurrency, formatDate } from "../lib/utils";
 import ExpenseFormModal from "../components/expense/ExpenseFormModal";
@@ -41,7 +41,7 @@ const Expenses: React.FC = () => {
     search: "",
     match_values: {},
   });
-  const { data, isLoading: expenseLoading } =
+  const { data } =
     useFindAndfilterExpenseQuery(filters);
   const expenses = useMemo(() => {
     if (data?.success) {
@@ -60,8 +60,6 @@ const Expenses: React.FC = () => {
   const filterExpenses = (payload: findandfilter) => {
     setfilters(payload);
   };
-
-  const totalSpent = 400000;
 
   const handleAdd = () => {
     setEditingExpense(null);

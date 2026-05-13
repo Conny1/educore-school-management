@@ -1,6 +1,6 @@
 import { Grade } from "@/types";
 import { ChevronRight, Edit2, Plus } from "lucide-react";
-import React, { useState } from "react";
+import  { useState } from "react";
 import GradeDetailsModal from "./GradeDetailsModal";
 type Props = {
   grade: Grade;

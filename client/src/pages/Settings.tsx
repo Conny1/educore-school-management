@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { 
-  Settings, 
   Users, 
   Building2, 
   School as SchoolIcon, 
-  Bell, 
-  ShieldCheck,
   ChevronRight
 } from 'lucide-react';
 import { cn } from '../lib/utils'; // Assuming you have a utility for tailwind classes

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Plus, Trash2, Edit2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -76,10 +76,7 @@ const GradeRequirementsManager: React.FC<Props> = ({ gradeId }) => {
     setEditingReq(null);
   };
 
-  const handleEdit = (req: GradeRequirement) => {
-    setEditingReq(req);
-    reset(req);
-  };
+ 
 
   return (
     <div className="space-y-6">

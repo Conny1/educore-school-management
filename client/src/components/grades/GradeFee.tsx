@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Plus, Trash2, Edit2 } from "lucide-react";
+import { Plus, Trash2,  } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -50,14 +50,14 @@ const GradeFeesManager: React.FC<Props> = ({gradeId}) => {
     if (editingFee) {
        const grd = await updateGradeFees({ ...payload, _id: data._id });
          if (grd.data?.success) {
-           toast.success("grade updated");
+           toast.success("grade fee updated");
          } else {
            toast.error("Failed. Try again");
          }
     } else {
            const newgrd = await createGradeFees({...payload, gradeId});
               if (newgrd.data?.success) {
-                toast.success("New grade created");
+                toast.success("New grade fee added");
                
               } else {
                 toast.error("Failed. Try again");
@@ -95,9 +95,9 @@ const GradeFeesManager: React.FC<Props> = ({gradeId}) => {
        
         <input {...register("description")} placeholder="Description" className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm" />
 
-        <button type="submit" className="bg-indigo-600 text-white py-1.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2">
+        <button disabled={creating || updating} type="submit" className="bg-indigo-600 text-white py-1.5 rounded-lg text-sm font-bold flex items-center justify-center gap-2">
           <Plus size={16} />
-          {editingFee ? "Update" : "Add Fee"}
+          { (updating || creating)?<Loading size="sm" /> :  editingFee ? "Update" : "Add Fee"}
         </button>
       </form>
 

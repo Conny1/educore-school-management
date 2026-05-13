@@ -56,7 +56,6 @@ export const findandfilterProjects = async (req, resp, next) => {
        
       ];
     }
-    console.log(filter)
 
     const client = await projectService.findandfilterProjects(filter, options);
 

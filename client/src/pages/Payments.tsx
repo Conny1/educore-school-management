@@ -1,15 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { payments as mockPayments, students, grades, gradeFees } from '../mock/data';
-import { Payment } from '../mock/types';
 import { Badge } from '../components/Badge';
-import { Modal } from '../components/Modal';
-import { Search, Plus, Filter, Download, CreditCard, Smartphone, Banknote, Landmark, Wallet } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 
-import { cn, formatCurrency, formatDate } from '../lib/utils';
-import { motion } from 'motion/react';
+import { formatCurrency, formatDate } from '../lib/utils';
 import PaymentFormModal from '../components/payments/PaymentFormModal';
-import { findandfilter, pagination, studentBalance } from '@/types';
-import { useFindAndfilterPaymentsQuery, useLazyGetStudentBalanceQuery } from '../features/apiSlice';
+import { findandfilter, pagination } from '@/types';
+import { useFindAndfilterPaymentsQuery,  } from '../features/apiSlice';
 import PaginationBtn from '../components/shared/Pagination';
 
 
@@ -31,7 +27,7 @@ const [paginationdata, setpaginationdata] = useState<pagination>({
     search: "",
     match_values: {},
   });
-  const { data,  isLoading:paymentsLoading } = useFindAndfilterPaymentsQuery(filters);
+  const { data } = useFindAndfilterPaymentsQuery(filters);
   const payments = useMemo(() => {
     if(data?.success){
       setpaginationdata({    page: data.data.page,

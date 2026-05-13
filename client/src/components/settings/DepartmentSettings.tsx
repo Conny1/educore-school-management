@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Building2, Plus, Edit3, Trash2, Search } from 'lucide-react';
+import  { useMemo, useState } from 'react';
+import { Building2, Plus, Edit3, Trash2 } from 'lucide-react';
 import { useGetDepartmentsQuery, useDeleteDepartmentMutation } from '../../features/apiSlice';
 import { toast } from 'react-toastify';
 import { Department } from '@/types';
@@ -11,7 +11,6 @@ const DepartmentSettings = () => {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const departments = useMemo(() => deptData?.data || [], [deptData?.data ])
 

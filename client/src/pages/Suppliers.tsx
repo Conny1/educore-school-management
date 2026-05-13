@@ -31,9 +31,7 @@ const Suppliers: React.FC = () => {
   });
   const {
     data,
-    refetch,
-    isLoading: suppliersLoading,
-  } = useFindAndfilterSupplierQuery(filters);
+     } = useFindAndfilterSupplierQuery(filters);
   const suppliers = useMemo(() => {
     if (data?.success) {
       setpaginationdata({

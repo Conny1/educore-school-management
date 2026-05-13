@@ -1,15 +1,13 @@
-import React, { useMemo, useState } from "react";
+import  { useMemo, useState } from "react";
 import {
   User,
   Phone,
   Calendar,
-  Hash,
-  MapPin,
+
   Wallet,
   CheckCircle2,
   AlertCircle,
   PackageCheck,
-  History,
   TrendingUp,
   Info,
   Search,

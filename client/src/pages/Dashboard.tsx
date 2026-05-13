@@ -1,29 +1,13 @@
 import React, { useMemo, useState } from "react";
 import {
-  BarChart3,
-  Users,
+    Users,
   Briefcase,
-  Wallet,
-  Receipt,
-  AlertTriangle,
-  TrendingUp,
-  Clock,
-  School as LucideSchool,
 } from "lucide-react";
-import {
-  students,
-  employees,
-  expenses,
-  inventoryItems,
-  studentAttendance,
-  employeeAttendance,
-} from "../mock/data";
 import { StatCard } from "../components/StatCard";
 import { Badge } from "../components/Badge";
-import { cn, formatCurrency, formatDate } from "../lib/utils";
+import { formatCurrency, formatDate } from "../lib/utils";
 import {
   useFindAndfilterPaymentsQuery,
-  useFindAndfilterStudentsQuery,
   useGetauthuserQuery,
   useGetDashboardSummaryQuery,
   useGetInventoryAlertsQuery,
@@ -46,7 +30,7 @@ const Dashboard: React.FC = () => {
   const {data:alertsResp} = useGetInventoryAlertsQuery()
   const inventoryAlerts = useMemo(() => alertsResp?.data || [], [alertsResp?.data])
 
-  const [filters, setfilters] = useState<findandfilter>({
+  const [filters] = useState<findandfilter>({
     sortBy: "_id:-1",
     limit: 15,
     page: 1,
@@ -60,38 +44,10 @@ const Dashboard: React.FC = () => {
   }, [data?.data]);
 
   const {data:dashboardSumm} = useGetDashboardSummaryQuery()  
-  // Aggregate data
-  const totalStudents = students.length;
-  const activeEmployees = employees.filter((e) => e.status === "active").length;
 
-  const currentTermPayments = payments.reduce(
-    (acc, curr) => acc + curr.amount,
-    0,
-  );
-  const currentTermExpenses = expenses.reduce(
-    (acc, curr) => acc + curr.amount,
-    0,
-  );
-
-  const lowStockItems = inventoryItems.filter(
-    (item) => item.quantity <= item.reorderLevel,
-  );
   const recentPayments = [...payments]
     .sort((a, b) => new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime())
     .slice(0, 5);
-
-  const todayStr = "2025-04-18"; // Mock today
-  const studentAttToday = studentAttendance.filter((a) => a.date === todayStr);
-  const studentPresent = studentAttToday.filter(
-    (a) => a.status === "present",
-  ).length;
-
-  const employeeAttToday = employeeAttendance.filter(
-    (a) => a.date === todayStr,
-  );
-  const employeePresent = employeeAttToday.filter(
-    (a) => a.status === "present",
-  ).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -257,23 +213,5 @@ const Dashboard: React.FC = () => {
   );
 };
 
-// Internal icon for the quick action card
-function SchoolIcon({ size }: { size: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  );
-}
 
 export default Dashboard;

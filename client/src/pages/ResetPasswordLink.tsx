@@ -1,36 +1,20 @@
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+
 import { motion, AnimatePresence } from "motion/react";
-
-
 import { toast } from "react-toastify";
 import { useResetPasswordLinkMutation } from "../features/apiSlice";
-import { Link, useNavigate } from "react-router-dom";
-import { AlertCircle, Loader2, LogIn, Mail } from "lucide-react";
+import { Link} from "react-router-dom";
+import { AlertCircle, Loader2,  Mail } from "lucide-react";
 import { useState } from "react";
 
 
-const schema = Yup.object({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-});
-
 const ResetPasswordLink = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ email: string }>({
-    resolver: yupResolver(schema),
-  });
+
     const [errorMsg, setErrorMsg] = useState("");
       const [email, setEmail] = useState("");
     
       const [sendResetLinkEmail, { isLoading }] =
     useResetPasswordLinkMutation();
-  const onsubmit =  async (e: React.FormEvent) => {
+  const onsubmit =  async (e:  React.SubmitEvent<HTMLFormElement>) => {
       e.preventDefault();
       setErrorMsg("");
   

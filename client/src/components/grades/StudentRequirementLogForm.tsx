@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -6,7 +6,7 @@ import { Modal } from "../Modal";
 import {
   useCreateRequirementLogsMutation, useGetGradesRequirementsQuery,
 } from "../../features/apiSlice";
-import { Package, Calendar, MessageSquare, ListChecks } from "lucide-react";
+import { Package, Calendar, MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import { requirementLogs } from "@/types";
 

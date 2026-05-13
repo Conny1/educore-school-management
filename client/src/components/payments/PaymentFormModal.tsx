@@ -6,7 +6,6 @@ import { GradeFee, Payment } from "@/types";
 import { Modal } from "../Modal";
 import {
   useCreatePaymentMutation,
-  useGetGradesFeeQuery,
   useGetStudentsQuery,
   useLazyGetGradesFeeQuery,
 } from "../../features/apiSlice";

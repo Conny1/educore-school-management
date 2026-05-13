@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Badge } from '../components/Badge';
-import { Search, Plus, Filter, Edit2, Eye, Mail, Phone, Briefcase } from 'lucide-react';
-import { cn, formatDate } from '../lib/utils';
+import { Search, Plus,  Edit2, Eye, Mail, Phone } from 'lucide-react';
+import {  formatDate } from '../lib/utils';
 import EmployeeFormModal from '../components/employees/EmployeeFormModal';
 import { Employee, findandfilter, pagination } from '@/types';
 import { useEmployeesStatsQuery, useFindAndfilterEmployeesQuery } from '../features/apiSlice';
@@ -29,7 +29,7 @@ const Employees: React.FC = () => {
     search: "",
     match_values: {},
   });
-  const { data, isLoading: inventoryLoading } =
+  const { data } =
     useFindAndfilterEmployeesQuery(filters);
   const employees = useMemo(() => {
     if (data?.success) {

@@ -3,9 +3,6 @@ import { Badge } from "../components/Badge";
 import {
   Search,
   Plus,
-  AlertCircle,
-  Package,
-  Archive,
   MoreVertical,
   Edit2,
 } from "lucide-react";
@@ -34,7 +31,7 @@ const Inventory: React.FC = () => {
     search: "",
     match_values: {},
   });
-  const { data, isLoading: inventoryLoading } =
+  const { data } =
     useFindAndfilterInventoryItemQuery(filters);
   const inventories = useMemo(() => {
     if (data?.success) {
@@ -54,11 +51,8 @@ const Inventory: React.FC = () => {
     setfilters(payload);
   };
 
-  const lowStockCount = 30;
-
   const handleAdd = () => {
     setEditingItem(null);
-
     setIsModalOpen(true);
   };
 

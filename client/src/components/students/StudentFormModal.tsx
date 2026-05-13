@@ -94,6 +94,7 @@ const StudentFormModal = ({
       const stu = await updateStudent({...payload, _id:data._id});
       if (stu.data?.success) {
         toast.success("student updated");
+        setEditingStudent(null)
         reset({
           firstName: "",
           lastName: "",

@@ -8,6 +8,7 @@ import { cn } from "../../lib/utils";
 import { Pencil, Wallet } from "lucide-react";
 import { useCreateProjectMutation, useUpdateProjectMutation } from "../../features/apiSlice";
 import { toast } from "react-toastify";
+import { Loading } from "../shared/Loading";
  
 const projectSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -69,6 +70,7 @@ const ProjectFormModal = ({
      const pro = await updateProject(data)
         if(pro.data?.success){
             toast.success("project updated");
+            setEditingProject(null)
         }else{
             toast.error("Failed. Try again")
         }
@@ -207,11 +209,12 @@ const ProjectFormModal = ({
               Cancel
             </button>
             <button
+            disabled={updating || creating}
               type="submit"
               className="px-6 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 flex items-center gap-2"
             >
-              <Pencil size={16} />
-              Record Project
+              <Pencil   size={16} />
+            { (creating || updating)?<Loading size="sm" />: "  Record Project"}
             </button>
           </div>
         </form>

@@ -11,6 +11,7 @@ import {
   useUpdateGradeMutation,
 } from "../../features/apiSlice";
 import { toast } from "react-toastify";
+import { Loading } from "../shared/Loading";
 
 // Schema
 const gradeSchema = yup.object().shape({
@@ -57,7 +58,7 @@ const GradeFormModal = ({
         classTeacherId: "",
       });
     }
-  }, [activeGrade, reset]);
+  }, [activeGrade]);
 
   const onSubmit = async (data: Partial<Grade>) => {
     let payload = {
@@ -70,6 +71,7 @@ const GradeFormModal = ({
       const grd = await updateGrade({ ...payload, _id: data._id });
       if (grd.data?.success) {
         toast.success("grade updated");
+        setActiveGrade(null)
       } else {
         toast.error("Failed. Try again");
       }
@@ -162,10 +164,11 @@ const GradeFormModal = ({
               Cancel
             </button>
             <button
+             disabled={updating || creating}
               type="submit"
               className="px-6 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold"
             >
-              Save Changes
+             {(updating || creating)?<Loading size="sm"/>:"Save Changes"}
             </button>
           </div>
         </form>

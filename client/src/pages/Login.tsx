@@ -59,7 +59,7 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 text-white">
             <LogIn size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Mshiriki Academy</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Elroi Hillview School</h1>
           <p className="text-gray-500 mt-2">Sign in to manage your school</p>
         </div>
 

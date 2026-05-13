@@ -60,6 +60,7 @@ const InventoryFormModal = ({setEditingItem, setIsModalOpen, editingItem, isModa
             const inv = await updateInventory({...data,lastUpdated:new Date().toString()})
                if(inv.data?.success){
                    toast.success("inventory updated");
+                   setEditingItem(null)
                }else{
                    toast.error("Failed. Try again")
                }

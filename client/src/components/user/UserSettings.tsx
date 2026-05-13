@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import {  UserPlus, Edit3, Trash2, Search,  } from 'lucide-react';
+import  { useMemo, useState } from 'react';
+import {  UserPlus, Edit3, Trash2,   } from 'lucide-react';
 import { useGetUsersQuery, useDeleteUserMutation } from '../../features/apiSlice';
 import { toast } from 'react-toastify';
 import UserModal from './UserModalForm';
