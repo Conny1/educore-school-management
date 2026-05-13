@@ -8,6 +8,7 @@
     "build": "vite build --config vite.config.ts",
     "preview": "vite preview --config vite.config.ts",
     "clean": "rm -rf dist",
+    "start": "npm install && pm2 restart school-api",
     "lint": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
