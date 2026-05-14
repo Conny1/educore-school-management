@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   employees as mockEmployees, 
-  studentAttendance as mockStudentAtt, 
   employeeAttendance as mockEmployeeAtt 
 } from '../mock/data';
 import {  EmployeeAttendance } from '../mock/types';
 import { Badge } from '../components/Badge';
 import { cn } from '../lib/utils';
 import { Calendar, Users, Briefcase, CheckCircle, XCircle, Clock, AlertCircle, Save, Search } from 'lucide-react';
-import { useGetGradesQuery, useGetStudentsQuery, useLazyGetStudentAttendanceQuery, useLazyGetStudentsQuery, useSaveBulkAttendanceMutation,  } from '../features/apiSlice';
+import { useGetGradesQuery,  useLazyGetStudentAttendanceQuery, useLazyGetStudentsQuery, useSaveBulkAttendanceMutation,  } from '../features/apiSlice';
 import { Student, StudentAttendance } from '@/types';
 import { toast } from 'react-toastify';
 
@@ -22,7 +21,7 @@ const Attendance: React.FC = () => {
 const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
 
   const [activeTab, setActiveTab] = useState<'students' | 'employees'>('students');
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]); // Mock today
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(); // Mock today
   const [selectedGradeId, setSelectedGradeId] = useState('');
 
   // Local state for attendance records being marked
@@ -39,7 +38,7 @@ const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
           _id:s._id,
           studentId: s._id,
           gradeId: s.gradeId,
-          date: selectedDate,
+          date: selectedDate as string,
           status: 'present' as "present" | "absent" ,
           remarks: '',
         };
@@ -59,7 +58,7 @@ const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
         return existing || {
           id: `new-e-${e.id}-${selectedDate}`,
           employeeId: e.id,
-          date: selectedDate,
+          date: selectedDate as string,
           status: 'present' as any,
           checkIn: '07:30',
           checkOut: '17:00',
@@ -81,14 +80,13 @@ const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
   };
 
   const handleSave = async() => {
-    alert('Attendance records saved locally for ' + selectedDate);
-    // In a real app, this would persist to backend
     await saveBulkAttendance(studentRecords.map(({_id,...other})=>other)).then((resp)=>{
       if(resp.data?.success){
         toast.info("Attendance recorded");
       }
+    }).catch(()=>{
+      toast.error("Try again!")
     })
-    console.log(studentRecords)
   };
 
   const getSummary = () => {
