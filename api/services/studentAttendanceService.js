@@ -4,7 +4,7 @@ export const getAll = async (filters = {}) => {
   const query = { schoolId: filters.schoolId }
   if (filters.gradeId) query.gradeId = filters.gradeId
   if (filters.date) query.date = filters.date
-  return await StudentAttendance.find(query).populate('studentId', 'firstName lastName admissionNo')
+  return await StudentAttendance.find(query)
 }
 
 export const create = async (data) => {

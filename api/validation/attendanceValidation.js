@@ -10,7 +10,7 @@ export const recordAttendanceSchema = {
     checkIn: Joi.string().allow(null),
     checkOut: Joi.string().allow(null),
     remarks: Joi.string().allow(''),
-    recordedBy: Joi.string().required()
+    
   })
 }
 
@@ -24,6 +24,5 @@ export const bulkAttendanceSchema = {
     checkIn: Joi.string().allow(null),
     checkOut: Joi.string().allow(null),
     remarks: Joi.string().allow(''),
-    recordedBy: Joi.string().required()
   }))
 }
