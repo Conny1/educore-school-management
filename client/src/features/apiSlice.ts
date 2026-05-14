@@ -26,6 +26,7 @@ import {
   requirementLogs,
   School,
   Timetable,
+  StudentAttendance,
 } from "../types";
 
 export const apiSlice = createApi({
@@ -48,6 +49,7 @@ export const apiSlice = createApi({
     "Project",
     "School",
     "Timetable",
+    "Student-Attendance"
   ],
   endpoints: (build) => ({
     // Auth
@@ -128,8 +130,8 @@ export const apiSlice = createApi({
     }),
 
     // Students
-    getStudents: build.query<ApiResponse<Student[]>, void>({
-      query: () => "/students",
+    getStudents: build.query<ApiResponse<Student[]>, void | string>({
+      query: (gradeId) => `/students?gradeId=${gradeId||""}`,
       providesTags: ["Student"],
     }),
     getStudentById: build.query<ApiResponse<Student>, string>({
@@ -451,22 +453,27 @@ export const apiSlice = createApi({
       invalidatesTags: ["Expense"],
     }),
 
-    // Attendance
-    getAttendance: build.query<
-      any[],
-      { date: string; type: "student" | "employee" }
-    >({
-      query: ({ date, type }) =>
-        `/finance/attendance?date=${date}&type=${type}`,
-      providesTags: ["Attendance"],
+    // student Attendance
+     getStudentAttendance: build.query<ApiResponse<StudentAttendance[]>, {date:string, gradeId:string}>({
+      query: ({gradeId, date}) => `/student-attendance?gradeId=${gradeId}&date=${date}`,
+      providesTags: ["Student-Attendance"],
     }),
-    markAttendance: build.mutation<void, { date: string; records: any[] }>({
+    
+    saveBulkAttendance: build.mutation<ApiResponse<StudentAttendance>, Partial<Omit<StudentAttendance, "_id">[]>>({
       query: (body) => ({
-        url: "/finance/attendance",
+        url: "/student-attendance/bulk",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Attendance"],
+      invalidatesTags: ["Student-Attendance"],
+    }),
+    updateStudentAttendance: build.mutation<ApiResponse<StudentAttendance>, Partial<StudentAttendance>>({
+      query: (data) => ({
+        url: `/student-attendance/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Student-Attendance"],
     }),
 
     // Inventory
@@ -684,6 +691,7 @@ export const {
   useGetStudentByIdQuery,
   useGetStudentFinancialQuery,
   useGetStudentReqStatusQuery,
+  useLazyGetStudentsQuery,
   // grades
   useGetGradesQuery,
   useCreateGradeMutation,
@@ -725,8 +733,9 @@ export const {
   useFindAndfilterExpenseQuery,
   useUpdateExpenseMutation,
   // Attendance
-  useGetAttendanceQuery,
-  useMarkAttendanceMutation,
+  useLazyGetStudentAttendanceQuery,
+  useSaveBulkAttendanceMutation,
+  useUpdateStudentAttendanceMutation,
   // inventory
   useGetInventoryQuery,
   useCreateInventoryItemMutation,

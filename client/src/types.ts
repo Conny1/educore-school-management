@@ -78,7 +78,15 @@ export interface reqStatus {
   isComplete: Boolean;
   pendingQty: number;
 }
-
+export interface StudentAttendance {
+  _id: string;
+  studentId: string;
+  gradeId: string;
+  date: string;
+  status: 'present' | 'absent';
+  remarks: string;
+  // recordedBy: string;
+}
 export interface requirementLogs {
       studentId: string,
     requirementId: string,

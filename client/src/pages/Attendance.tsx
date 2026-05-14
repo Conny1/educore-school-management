@@ -1,42 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
-  students as mockStudents, 
   employees as mockEmployees, 
-  grades, 
   studentAttendance as mockStudentAtt, 
   employeeAttendance as mockEmployeeAtt 
 } from '../mock/data';
-import { StudentAttendance, EmployeeAttendance } from '../mock/types';
+import {  EmployeeAttendance } from '../mock/types';
 import { Badge } from '../components/Badge';
 import { cn } from '../lib/utils';
 import { Calendar, Users, Briefcase, CheckCircle, XCircle, Clock, AlertCircle, Save, Search } from 'lucide-react';
+import { useGetGradesQuery, useGetStudentsQuery, useLazyGetStudentAttendanceQuery, useLazyGetStudentsQuery, useSaveBulkAttendanceMutation,  } from '../features/apiSlice';
+import { Student, StudentAttendance } from '@/types';
+import { toast } from 'react-toastify';
 
 const Attendance: React.FC = () => {
+   
+    const {data:gradeData} = useGetGradesQuery()
+    const [getStudentsByGradeId] = useLazyGetStudentsQuery()
+    const [getStudentAttndance] = useLazyGetStudentAttendanceQuery()
+    const [saveBulkAttendance] = useSaveBulkAttendanceMutation()
+
+const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
+
   const [activeTab, setActiveTab] = useState<'students' | 'employees'>('students');
-  const [selectedDate, setSelectedDate] = useState('2025-04-18'); // Mock today
-  const [selectedGradeId, setSelectedGradeId] = useState(grades[0]?.id || '');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]); // Mock today
+  const [selectedGradeId, setSelectedGradeId] = useState('');
 
   // Local state for attendance records being marked
+  const [students, setstudents] = useState<Student[]>([])
+  const [studentAtt, setstudentAtt] = useState<StudentAttendance[]>([])
   const [studentRecords, setStudentRecords] = useState<StudentAttendance[]>([]);
   const [employeeRecords, setEmployeeRecords] = useState<EmployeeAttendance[]>([]);
+  
+
+  const records =useMemo(() => {
+        return students.map(s => {
+        const existing = studentAtt.find(a => a.studentId === s._id);
+        return existing ||  {
+          _id:s._id,
+          studentId: s._id,
+          gradeId: s.gradeId,
+          date: selectedDate,
+          status: 'present' as "present" | "absent" ,
+          remarks: '',
+        };
+      });
+      }, [selectedDate, selectedGradeId])
 
   // Initialize records for selected date/filters
   useEffect(() => {
     if (activeTab === 'students') {
-      const filteredStudents = mockStudents.filter(s => s.gradeId === selectedGradeId);
-      const records = filteredStudents.map(s => {
-        const existing = mockStudentAtt.find(a => a.studentId === s.id && a.date === selectedDate);
-        return existing || {
-          id: `new-s-${s.id}-${selectedDate}`,
-          studentId: s.id,
-          gradeId: s.gradeId,
-          date: selectedDate,
-          status: 'present' as any,
-          remarks: '',
-          recordedBy: 'Admin'
-        };
-      });
-      setStudentRecords(records);
+      
+      setStudentRecords(records || []);
+
+    
     } else {
       const records = mockEmployees.map(e => {
         const existing = mockEmployeeAtt.find(a => a.employeeId === e.id && a.date === selectedDate);
@@ -53,19 +69,26 @@ const Attendance: React.FC = () => {
       });
       setEmployeeRecords(records);
     }
-  }, [activeTab, selectedDate, selectedGradeId]);
+  }, [records]);
 
+  
   const updateStudentStatus = (id: string, status: any) => {
-    setStudentRecords(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+    setStudentRecords(prev => prev.map(r => r._id === id ? { ...r, status } : r));
   };
 
   const updateEmployeeStatus = (id: string, status: any) => {
     setEmployeeRecords(prev => prev.map(r => r.id === id ? { ...r, status } : r));
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
     alert('Attendance records saved locally for ' + selectedDate);
     // In a real app, this would persist to backend
+    await saveBulkAttendance(studentRecords.map(({_id,...other})=>other)).then((resp)=>{
+      if(resp.data?.success){
+        toast.info("Attendance recorded");
+      }
+    })
+    console.log(studentRecords)
   };
 
   const getSummary = () => {
@@ -105,13 +128,13 @@ const Attendance: React.FC = () => {
               <Users size={18} />
               Students
             </button>
-            <button 
+            {/* <button 
               onClick={() => setActiveTab('employees')}
               className={cn("w-full px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-bold transition-all", activeTab === 'employees' ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100" : "text-gray-500 hover:bg-gray-50")}
             >
               <Briefcase size={18} />
               Employees
-            </button>
+            </button> */}
           </div>
 
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
@@ -122,7 +145,13 @@ const Attendance: React.FC = () => {
                  <input 
                   type="date" 
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
+                  onChange={(e) => {
+                       getStudentAttndance({date:e.target.value, gradeId:selectedGradeId}).then((resp)=>{
+                      if(resp.data?.success){
+                        setstudentAtt(resp.data.data)
+                      }
+                    })
+                    setSelectedDate(e.target.value)}}
                   className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium" 
                  />
               </div>
@@ -133,10 +162,17 @@ const Attendance: React.FC = () => {
                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Grade</label>
                 <select 
                   value={selectedGradeId}
-                  onChange={(e) => setSelectedGradeId(e.target.value)}
+                  onChange={(e) => {
+                    getStudentsByGradeId(e.target.value).then((resp)=>{
+                      if(resp.data?.success){
+                        setstudents(resp.data.data)
+                      }
+                    })
+                    setSelectedGradeId(e.target.value)}}
                   className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium"
                 >
-                  {grades.map(g => <option key={g.id} value={g.id}>{g.name} - {g.stream}</option>)}
+                  <option>Select grade</option>
+                  {grades.map(g => <option key={g._id} value={g._id}>{g.name} - {g.stream}</option>)}
                 </select>
               </div>
             )}
@@ -199,9 +235,10 @@ const Attendance: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {activeTab === 'students' ? studentRecords.map(record => {
-                    const student = mockStudents.find(s => s.id === record.studentId);
+                    const student = students.find(s => s._id === record.studentId);
+                    console.log(student)
                     return (
-                      <tr key={record.id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={record._id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4">
                           <p className="text-sm font-bold text-gray-900">{student?.firstName} {student?.lastName}</p>
                         </td>
@@ -217,10 +254,10 @@ const Attendance: React.FC = () => {
                                <label key={opt.val} className="relative cursor-pointer group">
                                   <input 
                                     type="radio" 
-                                    name={`status-${record.id}`} 
+                                    name={`status-${record._id}`} 
                                     className="sr-only peer"
                                     checked={record.status === opt.val}
-                                    onChange={() => updateStudentStatus(record.id, opt.val)}
+                                    onChange={() => updateStudentStatus(record._id, opt.val)}
                                   />
                                   <div className={cn(
                                     "w-10 h-10 rounded-xl border border-gray-100 bg-gray-50 flex items-center justify-center text-gray-400 transition-all peer-checked:text-white peer-checked:shadow-lg peer-checked:scale-110",
@@ -240,7 +277,7 @@ const Attendance: React.FC = () => {
                             placeholder="Add memo..." 
                             className="bg-transparent border-b border-gray-100 focus:border-indigo-300 text-xs w-full py-1 focus:outline-none"
                             value={record.remarks}
-                            onChange={(e) => updateStudentStatus(record.id, { ...record, remarks: e.target.value })}
+                            onChange={(e) => updateStudentStatus(record._id, { ...record, remarks: e.target.value })}
                           />
                         </td>
                       </tr>

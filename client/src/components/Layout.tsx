@@ -17,6 +17,7 @@ import {
   Menu as MenuIcon,
   X,
   Settings,
+  Clock,
 } from "lucide-react";
 import { accessRules, cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
@@ -38,7 +39,7 @@ const navItems = [
   { id: "grades", label: "Grades", icon: BookOpen },
   { id: "employees", label: "Employees", icon: Briefcase },
   { id: "timetable", label: "Timetable", icon: Calendar },
-  // { id: "attendance", label: "Attendance", icon: Clock },
+  { id: "attendance", label: "Attendance", icon: Clock },
   { id: "payments", label: "Payments", icon: Wallet },
   { id: "expenses", label: "Expenses", icon: Receipt },
   { id: "inventory", label: "Inventory", icon: Package },
@@ -47,7 +48,7 @@ const navItems = [
   // { id: "reports", label: "Reports", icon: FileText },
     { id: "settings", label: "Settings", icon: Settings },
 
-];
+]; 
 
 export const Layout = () => {
   const auth = useSelector((state: RootState) => state.auth.value.accessToken);
