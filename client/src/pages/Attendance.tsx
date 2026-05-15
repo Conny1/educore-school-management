@@ -43,7 +43,7 @@ const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
           remarks: '',
         };
       });
-      }, [selectedDate, selectedGradeId])
+      }, [ students,studentAtt])
 
   // Initialize records for selected date/filters
   useEffect(() => {
@@ -234,7 +234,6 @@ const grades = useMemo(() => gradeData?.data || [], [gradeData?.data ])
                 <tbody className="divide-y divide-gray-50">
                   {activeTab === 'students' ? studentRecords.map(record => {
                     const student = students.find(s => s._id === record.studentId);
-                    console.log(student)
                     return (
                       <tr key={record._id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4">
