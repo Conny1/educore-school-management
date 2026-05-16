@@ -18,6 +18,7 @@ import {
   X,
   Settings,
   Clock,
+  FileText,
 } from "lucide-react";
 import { accessRules, cn } from "../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
@@ -45,7 +46,7 @@ const navItems = [
   { id: "inventory", label: "Inventory", icon: Package },
   { id: "suppliers", label: "Suppliers", icon: Truck },
   { id: "projects", label: "Projects", icon: KanbanSquare },
-  // { id: "reports", label: "Reports", icon: FileText },
+  { id: "reports", label: "Reports", icon: FileText },
     { id: "settings", label: "Settings", icon: Settings },
 
 ]; 

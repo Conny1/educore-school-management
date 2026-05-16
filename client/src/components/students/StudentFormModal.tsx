@@ -28,7 +28,7 @@ const studentSchema = yup.object().shape({
     .required("Guardian phone is required"),
   status: yup
     .string()
-    .oneOf(["active", "suspended", "transferred", "graduated"])
+    .oneOf(["active", "suspended", "transferred"])
     .required(),
 });
 

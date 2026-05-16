@@ -26,7 +26,7 @@ export interface Student {
   gender: "male" | "female";
   guardianName: string;
   guardianPhone: string;
-  status: "active" | "suspended" | "transferred" | "graduated";
+  status: "active" | "suspended" | "transferred" 
   enrolledAt: string;
 }
 export interface studentFinancial {

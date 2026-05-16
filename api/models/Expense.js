@@ -12,7 +12,7 @@ const ExpenseSchema = new mongoose.Schema({
   expenseDate: { type: String, required: true },
   receiptNo: { type: String, required: true },
   status: { type: String, enum: ['pending', 'approved', 'paid'], default: 'pending' },
-  is_deleted: { type: String, default: false },
+  is_deleted: { type: Boolean, default: false },
 
 }, { timestamps: true })
 
